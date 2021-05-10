@@ -1,0 +1,55 @@
+/* GET categories. */
+router.get('/categories', function(req, res, next) {
+  res.render('categories', { title: 'HYIP', mess: 'categories'});
+});
+
+router.get('/categories/ref=:username', function(req, res, next) {
+	var username = req.params.username;
+	db.query( 'SELECT username FROM user WHERE username = ?', [username], function ( err, results, fields ){
+		if( err ) throw err;
+		if(results.length == 0){
+			res.redirect('/categories');
+		}else{
+			res.render('categories', { title: 'HYIP', username: username, mess: 'categories'});
+		}
+	});
+});
+
+router.get('/categories/ref=', function(req, res, next) {
+	res.redirect('/categories');
+});
+
+
+router.get('/categories=:cat_id', function(req, res, next) {
+  res.render('categories', { title: 'HYIP', mess: 'categories'});
+});
+
+router.get('/categories=:cat_id/ref=:username', function(req, res, next) {
+	var username = req.params.username;
+	db.query( 'SELECT username FROM user WHERE username = ?', [username], function ( err, results, fields ){
+		if( err ) throw err;
+		if(results.length == 0){
+			res.redirect('/categories=:cat_id');
+		}else{
+			res.render('categories', { title: 'HYIP', username: username, mess: 'categories'});
+		}
+	});
+});
+
+router.get('/categories=:cat_id/ref=', function(req, res, next) {
+	res.redirect('/categories=:cat_id');
+});
+
+
+
+//post register with facebook
+//post register with twitter
+//post register with google
+
+
+
+/* post login */
+//post login with facebook
+//post login with facebook
+//post login with twitter
+//post login with google
