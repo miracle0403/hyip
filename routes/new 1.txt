@@ -1,0 +1,56 @@
+
+SELECT node.username, (COUNT(parent.username) - (sub_tree.depth + 1)) AS depth FROM feeder_tree AS node, feeder_tree AS parent, feeder_tree AS sub_parent, (SELECT node.username, (COUNT(parent.username) - 1) AS depth FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? GROUP BY node.username ORDER BY node.lft )AS sub_tree WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.lft BETWEEN sub_parent.lft AND sub_parent.rgt AND sub_parent.username = sub_tree.username GROUP BY node.username HAVING depth <= 1 ORDER BY node.lft;
+
+
+ <div class="col-lg-6 col-md-6 col-sm-6" >
+	<div class="card card-stats">
+	  <div class="card-body ">
+		<div class="row">
+		  <div class="col-5 col-md-4">
+			<div class="icon-big text-center icon-warning">
+			  <i class="nc-icon nc-vector text-danger"></i>
+			</div>
+		  </div>
+		  <div class="col-7 col-md-8">
+			<div class="numbers">
+			 <p class="card-category">MY TREE</p>
+			  <div class = "row">
+			  <div class="col">
+			  {{left}}
+			  </div> 
+			  <div class="col">
+			  {{right}}
+			  </div>
+			  </div>
+			  <div class = "row">
+			  <div class="col">
+			  {{leftleft}}
+			  </div>
+			  <div class="col">
+			  {{leftright}}
+			  </div> 
+			  <div class="col">
+			  {{rightleft}}
+			  </div>
+			  <div class="col">
+			  {{rightright}}
+			  </div>
+			  </div>
+			  
+			</div>
+		  </div>
+		</div>
+	  </div>
+	  <div class="card-footer ">
+		<hr>
+		<div class="stats">
+		  <i class="fa fa-clock-o"></i>
+		  In the last hour
+		</div>
+	  </div>
+	</div>
+  </div>
+  
+  db.query( 'SELECT node.username, (COUNT(parent.username) - (sub_tree.depth + 1)) AS depth FROM feeder_tree AS node, feeder_tree AS parent, feeder_tree AS sub_parent, (SELECT node.username, (COUNT(parent.username) - 1) AS depth FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? AND node.amount < 2 GROUP BY node.username ORDER BY node.lft )AS sub_tree WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.lft BETWEEN sub_parent.lft AND sub_parent.rgt AND sub_parent.username = sub_tree.username GROUP BY node.username HAVING depth <= 1 ORDER BY node.lft;', [user.username], function ( err, results, fields ){
+															if( err ) throw err;
+															var 

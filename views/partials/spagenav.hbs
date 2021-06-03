@@ -17,52 +17,59 @@
       </div>
       <div class="sidebar-wrapper">
         <ul class="nav">
+		
           <li>
             <a href="/dashboard">
               <i class="nc-icon nc-bank"></i>
               <p>Dashboard</p>
             </a>
           </li>
+		  <li>
+            <a href="/addposition">
+              <i class="nc-icon nc-bank"></i>
+              <p>Add Position</p>
+            </a>
+          </li>
           
-          <li>
-              <a href="/fastteams/">
+         <li>
+              <a href="/editresult">
 			  <i class="nc-icon nc-user-run"></i>
-			  Fast Teams
+			  Edit Results
               </a>
             </li>
-          <li class="active ">
-            <a href="/profile">
-              <i class="nc-icon nc-badge"></i>
-              <p>User Profile</p>
-            </a>
-          </li>
-          <li>
-            <a href="/referrals">
-              <i class="nc-icon nc-single-02"></i>
-              <p>Referrals</p>
-            </a>
-          </li>
-          <li>
-            <a href="/transactions">
-              <i class="nc-icon nc-tile-56"></i>
-              <p>My Transactions</p>
-            </a>
-          </li>
+			
+			 <li>
+              <a href="/postresult">
+			  <i class="nc-icon nc-user-run"></i>
+			  Upload New Results
+              </a>
+            </li> 
+			<li>
+              <a href="/all-students-class">
+			  <i class="nc-icon nc-user-run"></i>
+			  My Class
+              </a>
+            </li>
+         
+          
+            
           {{#if admin}}
           <li>
             <a href="/all-Users">
-              <i class="nc-icon nc-nc-single-02"></i>
+              <i class="nc-icon nc-user-run"></i>
               <p>All Users</p>
             </a>
           </li>
 		   <li>
-            <a href="/all-transactions">
-              <i class="nc-wallet nc-caps-small"></i>
-              <p>All Transactions</p>
+            <li>
+            <a href="/all-students">
+              <i class="nc-icon nc-user-run"></i>
+              <p>All Students</p>
             </a>
           </li>
+		   <li>
           <li class="active-pro">
-            <a href="/admin-dashboard">
+            <a href="/admin">
               <i class="nc-icon nc-spaceship"></i>
               <p>Admin Panel</p>
             </a>
@@ -91,7 +98,7 @@
                 <span class="navbar-toggler-bar bar3"></span>
               </button>
             </div>
-            <a class="navbar-brand" href="/Dashboard">{{mess}}</a><br><span id = "left" class ="text-right text-danger ">COUNTDOWN TO LAUNCH: </span><div id = "count" class ="text-right text-danger text-bold"></div>
+            <a class="navbar-brand" href="/Dashboard">{{mess}}</a>
           </div>
           <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-bar navbar-kebab"></span>
@@ -143,3 +150,4 @@
           </div>-->
         </div>
       </nav>
+	  

@@ -1,0 +1,247 @@
+{{> spageh}}
+{{> spagenav}}
+
+	<div class="content">
+	 {{#if errors}}
+  {{#each errors}}
+  <div class="alert alert-danger">
+    {{this.msg}}
+  </div>
+  {{/each}}
+{{/if}}
+{{#if error}}
+			<div class="alert alert-danger">
+					{{error}}
+				  </div>
+			{{/if}}
+   <div class="row">
+   <div class="col-md-3">
+            <div class="card card-user">
+              <div class="card-header">
+                <h5 class="card-title"> Personal Profile </h5>
+              </div>
+              <div class="card-body">
+                <form>
+                
+
+			
+                  
+                      <div class="form-group">
+                        <label>sponsor </label>
+                        <input type="text" class="form-control" disabled="" placeholder="" value="{{bio.sponsor}}" readonly>
+                      
+                    </div>
+                    
+                      <div class="form-group">
+                        <label>Username</label>
+                        <input type="text" class="form-control" placeholder="Username" value="{{bio.username}}" readonly>
+                      
+                    </div>
+                    
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Email</label>
+                        <input type="email" class="form-control" placeholder="Email" value = "{{bio.email}}" name = "email" readonly/>
+                      
+                    
+                  </div>
+                  
+                      <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" class="form-control" placeholder="Full Name" value = "{{bio.full_name}}" name = "fullname" readonly/>
+                      
+                    </div>
+                    
+                      <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" class="form-control" placeholder="Phone Number" name = "phone" value="{{bio.phone}}" readonly/>
+                      
+                    </div>
+                  
+                  
+                  
+                </form>
+              </div>
+            
+          </div>
+          </div>
+          <div class="col-md-3">
+          <div class="card card-user">
+              <div class="card-header">
+                <h5 class="card-title">Edit Contact </h5>
+                	{{#showErrors}}
+				{{#emailerror}}
+				  <div id = "emailerror" class="alert alert-danger">
+					{{.}}
+				  </div>
+				{{/emailerror}}
+			{{/showErrors}}
+			 	{{#showSuccess}}
+				{{#emailsuccess}}
+				  <div id = "emailsuccess" class="alert alert-success">
+					{{.}}
+				  </div>
+				{{/emailsuccess}}
+			{{/showSuccess}}
+			{{#showErrors}}
+				{{#phoneerror}}
+				  <div id = "phoneerror" class="alert alert-danger">
+					{{.}}
+				  </div>
+				{{/phoneerror}}
+			{{/showErrors}}
+			 	{{#showSuccess}}
+				{{#phonesuccess}}
+				  <div id = "phonesuccess" class="alert alert-success">
+					{{.}}
+				  </div>
+				{{/phonesuccess}}
+			{{/showSuccess}}
+              </div>
+              <div class="card-body">
+                <form action = "/phonechange" method = "post">
+               
+                  
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Phone</label>
+                        <input type="tel" class="form-control" placeholder="Phone Number" value = "{{bio.phone}}" name = "phone" required/>
+                      
+                    </div>
+                    <div class="update  ml-auto mr-auto">
+                      <button type="submit" class="btn btn-primary btn-round">Change Phone </button>
+                    
+                  </div>
+                
+                </form>
+                <form action = "/emailchange" method = "post">
+               
+                  
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Email</label>
+                        <input type="email" class="form-control" placeholder="Email" value = "{{bio.email}}" name = "email" required/>
+                      
+                    </div>
+                    <div class="update  ml-auto mr-auto">
+                      <button type="submit" class="btn btn-primary btn-round">Change Email </button>
+                    
+                  </div>
+                
+                </form>
+              </div>
+            
+          </div>
+          </div>
+          <div class="col-md-3">
+          <div class="card card-user">
+              <div class="card-header">
+                <h5 class="card-title">Edit Password </h5>
+              </div>
+              <div class="card-body">
+                <form action = "/passwordchange" method = "post">
+               
+		
+			 	{{#showSuccess}}
+				{{#passwordsuccess}}
+				  <div id = "passwordsuccess" class="alert alert-success">
+					{{.}}
+				  </div>
+				{{/passwordsuccess}}
+			{{/showSuccess}}
+			{{#showErrors}}
+				{{#passworderror}}
+				  <div id = "passworderror" class="alert alert-danger">
+					{{.}}
+				  </div>
+				{{/passworderror}}
+			{{/showErrors}}
+                  
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Old Password</label>
+                        <input type="password" class="form-control" placeholder="Old Password"  name = "oldpass" required/>
+                      
+                    
+                    </div>
+                    
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">New Password</label>
+                        <input type="password" class="form-control" placeholder="New Password"  name = "password" required/>
+                      
+                    </div>
+                    
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Confirm Password</label>
+                        <input type="password" class="form-control" placeholder="Confirm Password"  name = "cpass" required/>
+                      
+                    </div>
+                    <div class="update  ml-auto mr-auto">
+                      <button type="submit" class="btn btn-primary btn-round">Change Password </button>
+                    
+                  </div>
+                </form>
+              </div>
+            
+          </div>
+          </div>
+           <div class="col-md-3">
+          <div class="card card-user">
+              <div class="card-header">
+                <h5 id = "bank" class="card-title">Bank Update </h5>
+              </div>
+              <div class="card-body">
+                <form action = "/bank" method = "post">
+                  
+                    {{#showSuccess}}
+				{{#banksuccess}}
+				  <div id = "banksuccess" class="alert alert-success">
+					{{.}}
+				  </div>
+				{{/banksuccess}}
+			{{/showSuccess}}
+			{{#showErrors}}
+				{{#bankerror}}
+				  <div id = "bankerror" class="alert alert-danger">
+					{{.}}
+				  </div>
+				{{/bankerror}}
+			{{/showErrors}}
+                      <div class="form-group">
+                        <label>Full Name </label>
+                        <input type="text" class="form-control"  placeholder="Full Name" value="{{bio.full_name}}" name = "fullname" />
+                      
+                    </div>
+                    
+                      <div class="form-group">
+                        <label>Account Name</label>
+                        <input type="text" class="form-control" placeholder="Account Name" name = "account_name" value="{{bio.account_name}}" required/>
+                      
+                    </div>
+                    
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Bank Name</label>
+                        <input type="text" class="form-control" placeholder="e.g Access Bank" name = "bank_name" value = "{{bio.bank_name}}" name = "bank_name" required/>
+                      
+                  </div>
+                  <div class="row">
+                    <div class="col-md-12 pr-1">
+                      <div class="form-group">
+                        <label>Account Number</label>
+                        <input name = "account_number" type="number" class="form-control" placeholder="Account Number" value = "{{bio.account_number}}" name = "fullname" required/>
+                      </div>
+                    </div>
+                    
+                    </div>
+                  
+                  
+                  <div class="row">
+                    <div class="update ml-auto mr-auto">
+                      <button type="submit" class="btn btn-primary btn-round">Update Bio </button>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            
+          </div>
+          </div>.
+          </div>
+        </div>
+      </div>
+{{> spagef}}

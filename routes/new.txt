@@ -1,0 +1,128 @@
+if(results[0].user_type === 'user'){
+			var bio = results[0];
+			if(bio.bank_name === null && bio.bitcoin === null){			
+				res.redirect('/profile/#bank');
+			}else{
+				if(bio.paid === 'No'){
+					res.redirect('/pay');
+				}else{
+					if(bio.bought === 'No'){
+						res.redirect('/shop');
+					}else{
+						db.query( 'SELECT SUM(points) FROM points AS points WHERE username = ?', [bio.username], function ( err, results, fields ){
+							if( err ) throw err;
+							var totalPoints = results[0].points;
+							db.query( 'SELECT * FROM user_packages WHERE username = ?', [bio.username], function ( err, results, fields ){
+								if( err ) throw err;
+								var user_packages = results[0].user_packages;
+								db.query( 'SELECT * FROM withdraw WHERE username = ? AND status = ?', [bio.username, 'Pending'], function ( err, results, fields ){
+									if( err ) throw err;
+									var pending_withdraw = results[0].pending_withdraw;
+									db.query( 'SELECT * FROM withdraw WHERE username = ? AND status = ?', [bio.username, 'Confirmed'], function ( err, results, fields ){
+										if( err ) throw err;
+										var confirmed_withdraw = results[0].confirmed_withdraw;
+										
+										var flashMessages = res.locals.getMessages();
+										if (flashMessages.success) {
+											res.render( 'dashboard', {
+												mess: 'USER DASHBOARD',
+												bio: bio,
+												showSuccess: true,
+												success: flashMessages.success,
+												totalPoints:totalPoints,
+												confirmed_withdraw:confirmed_withdraw,
+												pending_withdraw:pending_withdraw,
+												user_packages:user_packages
+											});
+										}else if (flashMessages.error){
+											res.render( 'dashboard', {
+												mess: 'USER DASHBOARD',
+												bio: bio,
+												showErrors: true,
+												error: flashMessages.error,
+												totalPoints:totalPoints,
+												confirmed_withdraw:confirmed_withdraw,
+												pending_withdraw:pending_withdraw,
+												user_packages:user_packages
+											});
+										}else{
+											res.render('dashboard', { 
+												mess: 'USER DASHBOARD', 
+												totalPoints:totalPoints,
+												confirmed_withdraw:confirmed_withdraw,
+												pending_withdraw:pending_withdraw,
+												user_packages:user_packages
+											});
+										}
+									});
+								});
+							});
+						});
+					}
+				}
+			}
+		}else{
+			var admin = results[0];
+			if(admin.bank_name === null && admin.bitcoin === null){			
+				res.redirect('/profile/#bank');
+			}else{
+				if(admin.paid === 'No'){
+					res.redirect('/pay');
+				}else{
+					if(admin.bought === 'No'){
+						res.redirect('/shop');
+					}else{
+						db.query( 'SELECT SUM(points) FROM points AS points WHERE username = ?', [admin.username], function ( err, results, fields ){
+							if( err ) throw err;
+							var totalPoints = results[0].points;
+							db.query( 'SELECT * FROM user_packages WHERE username = ?', [admin.username], function ( err, results, fields ){
+								if( err ) throw err;
+								var user_packages = results[0].user_packages;
+								db.query( 'SELECT * FROM withdraw WHERE username = ? AND status = ?', [admin.username, 'Pending'], function ( err, results, fields ){
+									if( err ) throw err;
+									var pending_withdraw = results[0].pending_withdraw;
+									db.query( 'SELECT * FROM withdraw WHERE username = ? AND status = ?', [admin.username, 'Confirmed'], function ( err, results, fields ){
+										if( err ) throw err;
+										var confirmed_withdraw = results[0].confirmed_withdraw;
+										
+										var flashMessages = res.locals.getMessages();
+										if (flashMessages.success) {
+											res.render( 'dashboard', {
+												mess: 'USER DASHBOARD',
+												admin: admin,
+												showSuccess: true,
+												success: flashMessages.success,
+												totalPoints:totalPoints,
+												confirmed_withdraw:confirmed_withdraw,
+												pending_withdraw:pending_withdraw,
+												user_packages:user_packages
+											});
+										}else if (flashMessages.error){
+											res.render( 'dashboard', {
+												mess: 'USER DASHBOARD',
+												admin: admin,
+												showErrors: true,
+												error: flashMessages.error,
+												totalPoints:totalPoints,
+												confirmed_withdraw:confirmed_withdraw,
+												pending_withdraw:pending_withdraw,
+												user_packages:user_packages
+											});
+										}else{
+											res.render('dashboard', { 
+												mess: 'USER DASHBOARD', 
+												totalPoints:totalPoints,
+												confirmed_withdraw:confirmed_withdraw,
+												pending_withdraw:pending_withdraw,
+												user_packages:user_packages
+											});
+										}
+									});
+								});
+							});
+						});
+					}
+				}
+			}
+		}	
+	});

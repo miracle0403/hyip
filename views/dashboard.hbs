@@ -1,0 +1,681 @@
+{{#if noactivate}}
+{{> spageh}}
+{{> spagenav}}
+<div class="content">
+<div class = "alert alert-danger">
+<p > You are yet to activate your account. </p>
+</div>
+{{#if user}}
+<h5 class = "text-primary">Hello {{user.full_name}}, Welcome to your dashboard!</h5>
+	{{/if}}{{#showErrors}}
+				{{#mergeerror}}
+				  <div id = "mergeerror" class="alert alert-danger">
+					{{.}}
+				  </div>
+				{{/mergeerror}}
+			{{/showErrors}}
+			{{#showErrors}}
+				{{#error}}
+				  <div id = "error" class="alert alert-danger">
+					{{.}}
+				  </div>
+				{{/error}}
+			{{/showErrors}}
+        <div class="row">
+          <div class="col-lg-12 col-md-12 col-sm-12">
+            <div class="card card-stats">
+              <div class="card-body ">
+                <div class="row">
+                  <div class="col-5 col-md-4">
+                    <div class="icon-big text-center icon-info">
+                      <i class="nc-icon nc-key text-warning"></i> 
+                    </div>
+                  </div>
+                  <div class="col-7 col-md-8">
+                  
+                    <div class="numbers">
+                    <form action = "/activate" method = "POST">
+                    <button class = " btn btn-success" type = "submit" id = "activate">Activate</button>
+                    </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i class="fa fa-refresh"></i>
+                  Update Now
+                </div>
+              </div>
+            </div>
+          </div>
+         </div>
+        </div>
+{{> spagef}}
+{{/if}}
+
+
+
+
+{{#if pending}}
+
+{{> spageh}}
+{{> spagenav}}
+<div class = "content">
+{{#showSuccess}}
+				{{#success}}
+				  <div id = "success" class="alert alert-success">
+					{{.}} click <a href = "/dashboard/#merging"> here to see</a>
+				  </div>
+				{{/success}}
+			{{/showSuccess}}
+				{{#showErrors}}
+				{{#mergeerror}}
+				  <div id = "mergeerror" class="alert alert-danger">
+					{{.}}
+				  </div>
+				{{/mergeerror}}
+			{{/showErrors}}
+<div class="row">
+          <div class="col-md-12">
+            <div class="card ">
+              <div class="card-header ">
+                <h5 class="card-title">Payment Details</h5>
+               
+              </div>
+              <div class="card-body ">
+                
+                <p class = "text-danger"><b>
+                Pay {{pending.receiver_fullname}} N1000 before {{pending.expire}}.</b>
+                </p>
+                <br>
+                <p>
+                Account Name:  {{pending.receiver_account_name}}<br>
+                Account Number: {{pending.receiver_account_number}}<br>
+                Bank: {{pending.receiver_bank_name}}<br>
+                Amount: N1000<br>
+                Phone: {{pending.receiver_phone}}<br>
+                Status: {{pending.status}}<br>
+                Time Left: <span class = "text-danger"> {{timeleft}} .</span>
+                </p>
+               
+                
+                
+                	<div class = "form-group">
+                	<a href = "/iPaid/{{pending.order_id}}"><button class = "btn btn-primary" type= "button">I have paid</button></a>
+                	</div>
+                
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i class="fa fa-history"></i> Updated 3 minutes ago
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+</div>
+{{> spagef}}
+
+
+{{/if}}
+
+{{#if unconfirmed}}
+{{> spageh}}{{> spagenav}}
+<div class = "content">
+{{#showSuccess}}
+				{{#success}}
+				  <div id = "success" class="alert alert-success">
+					{{.}} click <a href = "/dashboard/#merging"> here to see</a>
+				  </div>
+				{{/success}}
+			{{/showSuccess}}
+				{{#showErrors}}
+				{{#mergeerror}}
+				  <div id = "mergeerror" class="alert alert-danger">
+					{{.}}
+				  </div>
+				{{/mergeerror}}
+			{{/showErrors}}
+<div class="row">
+          <div class="col-md-12">
+            <div class="card ">
+              <div class="card-header ">
+                <h5 class="card-title">Payment Details</h5>
+               
+              </div>
+              <div class="card-body ">
+                
+                <p class = "text-danger"><b>
+                You claimed to pay  {{unconfirmed.receiver_fullname}} the sum of N1000. Call your receiver to confirm your payment before {{unconfirmed.expire}}</b>
+                </p>
+                <br>
+                <p>
+                Account Name:  {{unconfirmed.receiver_account_name}}<br>
+                Account Number: {{unconfirmed.receiver_account_number}}<br>
+                Bank: {{unconfirmed.receiver_bank_name}}<br>
+                Amount: N1000<br>
+                Phone: {{unconfirmed.receiver_phone}}<br>
+                Status: <span class = "text-warning"> {{unconfirmed.status}}</span><br>
+                Time Left: <span class = "text-danger"> {{timeleft}} .</span>
+                </p>
+                <br><img src = "{{unconfirmed.pop}}" height = " 250" width = "300" class = "img-fluid"/>
+                
+                
+                
+                	
+                
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i class="fa fa-history"></i> Updated 3 minutes ago
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+</div>
+{{> spagef}}
+{{/if}}
+
+{{#if contestmerge}}
+{{>spageh}}{{> spagenav}}
+<div class = "content">
+{{#showSuccess}}
+				{{#success}}
+				  <div id = "success" class="alert alert-danger">
+					{{.}} click <a href = "/dashboard/#merging"> here to see</a>
+				  </div>
+				{{/success}}
+			{{/showSuccess}}
+				{{#showErrors}}
+				{{#mergeerror}}
+				  <div id = "mergeerror" class="alert alert-danger">
+					{{.}}
+				  </div>
+				{{/mergeerror}}
+			{{/showErrors}}
+<div class="row">
+          <div class="col-md-12">
+            <div class="card ">
+              <div class="card-header ">
+                <h5 class="card-title">Payment Details</h5>
+               
+              </div>
+              <div class="card-body ">
+                
+                <p class = "text-danger"><b>
+                You claimed to pay  {{unconmerge.receiver_fullname}} the sum of N1000 however, {{contestmerge.receiver_fullname}} seems like he/she did not get the fund. You can still reach out to him or her. Meanwhile, Join the chat to resolve the issue</b>
+                </p>
+                <br>
+                {{#if chat}}
+                	<a href = "/chat/{{chat.id}}"><button type = "button" class = "btn btn-primary" >JOIN CHAT</button>
+                {{/if}}
+              </div>
+              <div class="card-footer ">
+                <hr>
+                <div class="stats">
+                  <i class="fa fa-history"></i> Updated 3 minutes ago
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+</div>
+{{> spagef}}
+{{/if}}
+
+
+<!-- if there is transaction-->
+
+{{#if activate}}
+{{> spageh}}{{> spagenav}}
+<div id = "content" class="content">
+	{{#showErrors}}
+{{#mergeerror}}
+  <div id = "mergeerror" class="alert alert-danger">
+	{{.}}
+  </div>
+{{/mergeerror}}
+{{/showErrors}}
+	{{#showSuccess}}
+	{{#success}}
+	  <div id = "success" class="alert alert-success">
+		{{.}}
+	  </div>
+	{{/success}}
+{{/showSuccess}}{{#if user}}
+<h5 class = "text-primary">Hello {{user.full_name}}, Welcome to your dashboard!</h5>
+{{/if}}
+<div class="row">
+  <div class="col-lg-4 col-md-6 col-sm-6">
+	<div class="card card-stats">
+	  <div class="card-body ">
+		<div class="row">
+		  <div class="col-5 col-md-4">
+			<div class="icon-big text-center icon-warning">
+			  <i class="nc-icon nc-globe text-warning"></i>
+			</div>
+		  </div>
+		  <div class="col-7 col-md-8">
+			<div class="numbers">
+			  <p class="card-category">Feeder Earnings</p>
+			  <p class="card-title">{{#if feedmatrix}}N{{feedmatrix.count}}{{/if}}<p>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	  <div class="card-footer ">
+		<hr>
+		<div class="stats">
+		  <i class="fa fa-refresh"></i>
+		  Update Now
+		</div>
+	  </div>
+	</div>
+  </div>
+  <div class="col-lg-4 col-md-6 col-sm-6">
+	<div class="card card-stats">
+	  <div class="card-body ">
+		<div class="row">
+		  <div class="col-5 col-md-4">
+			<div class="icon-big text-center icon-warning">
+			  <i class="nc-icon nc-money-coins text-success"></i>
+			</div>
+		  </div>
+		  <div class="col-7 col-md-8">
+			<div class="numbers">
+				<form action = "/enter-feeder" method = "POST">
+					<small><button class = "btn btn-primary" id = "enter-feeder" type "submit">Enter Feeder</button></small>
+				</form>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	  <div class="card-footer ">
+		<hr>
+		<div class="stats">
+		  <i class="fa fa-calendar-o"></i>
+		  Last day
+		</div>
+	  </div>
+	</div>
+  </div>
+  <div class="col-lg-4 col-md-6 col-sm-6">
+	<div class="card card-stats">
+	  <div class="card-body ">
+		<div class="row">
+		  <div class="col-5 col-md-4">
+			<div class="icon-big text-center icon-warning">
+			  <i class="nc-icon nc-vector text-danger"></i>
+			</div>
+		  </div>
+		  <div class="col-7 col-md-8">
+			<div class="numbers">
+			  <p class="card-category">Activation Bonus</p>
+			  <p class="card-title">{{#if actimatrix}}N{{actimatrix.count}}{{/if}}<p>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	  <div class="card-footer ">
+		<hr>
+		<div class="stats">
+		  <i class="fa fa-clock-o"></i>
+		  In the last hour
+		</div>
+	  </div>
+	</div>
+  </div>
+  <div class="col-lg-4 col-md-6 col-sm-6">
+	<div class="card card-stats">
+	  <div class="card-body ">
+		<div class="row">
+		  <div class="col-5 col-md-4">
+			<div class="icon-big text-center icon-warning">
+			  <i class="nc-icon nc-vector text-danger"></i>
+			</div>
+		  </div>
+		  <div class="col-7 col-md-8">
+			<div class="numbers">
+			  <p class="card-category">Expected Earnings</p>
+			  <p class="card-title">{{#if expectedEarn}}N{{expectedEarn.count}}{{/if}}<p>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	  <div class="card-footer ">
+		<hr>
+		<div class="stats">
+		  <i class="fa fa-clock-o"></i>
+		  In the last hour
+		</div>
+	  </div>
+	</div>
+  </div>
+  <div class="col-lg-4 col-md-6 col-sm-6">
+	<div class="card card-stats">
+	  <div class="card-body ">
+		<div class="row">
+		  <div class="col-5 col-md-4">
+			<div class="icon-big text-center icon-warning">
+			  <i class="nc-icon nc-vector text-danger"></i>
+			</div>
+		  </div>
+		  <div class="col-7 col-md-8">
+			<div class="numbers">
+			  <p class="card-category">Total Paid</p>
+			  <p class="card-title">{{#if totalPaid}}N{{totalPaid.count}} {{/if}}<p>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	  <div class="card-footer ">
+		<hr>
+		<div class="stats">
+		  <i class="fa fa-clock-o"></i>
+		  In the last hour
+		</div>
+	  </div>
+	</div>
+  </div>
+  <div class="col-lg-4 col-md-6 col-sm-6">
+	<div class="card card-stats">
+	  <div class="card-body ">
+		<div class="row">
+		  <div class="col-5 col-md-4">
+			<div class="icon-big text-center icon-warning">
+			  <i class="nc-icon nc-favourite-28 text-primary"></i>
+			</div>
+		  </div>
+		  <div class="col-7 col-md-8">
+			<div class="numbers">
+			  <p class="card-category">Total Earned</p>
+			  <p class="card-title">{{#if totalEarned}}N{{totalEarned.count}} {{/if}}<p>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	  <div class="card-footer ">
+		<hr>
+		<div class="stats">
+		  <i class="fa fa-refresh"></i>
+		  Update now
+		</div>
+	  </div>
+	</div>
+  </div>
+</div>
+<div class = "row">
+<div class="col-lg-10 col-md-10 col-sm-10 container" >
+	<div class="card card-stats">
+	  <div class="card-body ">
+		<div class="row">
+		  <div class="col-5 col-md-4">
+			<div class="icon-big text-center icon-warning">
+			  <i class="nc-icon nc-vector text-danger"></i>
+			</div>
+		  </div>
+		  <div class="col-7 col-md-8">
+			<div class="numbers">
+			 <p class="card-category">UPGRADE TO LEVEL TWO</p>
+			  <form action = "/upgradefeeder" method = "post">
+												<button class = "btn btn-primary" type= "submit">Upgrade</button></form>
+			</div>
+		  </div>
+		</div>
+	  </div>
+	  <div class="card-footer ">
+		<hr>
+		<div class="stats">
+		  <i class="fa fa-clock-o"></i>
+		  In the last hour
+		</div>
+	  </div>
+	</div>
+  </div>
+ 
+</div>
+<!-- sort out the merging section -->
+
+<div class="row">
+  <div class="col-md-12">
+	<div class="card ">
+	  <div class="card-header ">
+		<h5 class="card-title">MERGING</h5>
+		<p class="card-category">24 Hours performance</p>
+	  </div>
+	  <div class="card-body ">
+		
+		
+	<div class="row">
+		<div class="col-md-12">
+			<div class="card ">
+			{{#if nopop}}
+					{{#each nopop}}
+				<div class="card-header ">
+					<h5 class="card-title">Payment Details</h5>
+		   
+				</div>
+				<div class="card-body ">
+				
+						<p class = "text-danger"><b>
+							Pay {{receiver_username}} N{{amount}} before {{ expire}}.</b>
+						</p>
+						<br>
+						<p>
+							Account Name:  {{ receiver_account_name}}<br>
+							Account Number: {{ receiver_account_number}}<br>
+							Bank: {{ receiver_bank_name}}<br>
+
+							Amount: N{{amount}}<br>
+							Phone: {{ receiver_phone}}<br>
+							Status: {{ status}}<br>
+							Time Left: <span class = "text-danger"> {{timeleft}} .</span>
+						</p>						   
+				   
+					
+						<div class = "form-group">
+							<a href = "/iPaid/{{ order_id}}"><button class = "btn btn-primary" type= "button">I have paid</button></a>
+						</div>
+					{{/each}}
+				{{/if}}
+					
+			
+				{{#if pop}}
+					{{#each pop}}
+						<div class="row">
+							<div class="col-md-12">
+								<div class="card ">
+									<div class="card-header ">
+										<h5 class="card-title">Payment Details</h5>
+							   
+									</div>
+								<div class="card-body ">									
+									<p class = "text-danger"><b>
+										You claimed to pay {{ receiver_fullname}} N{{amount}}. Notify {{receiver_fullname}}  to confirm your payment before {{  expire}}.</b>
+									</p>
+									<br>
+									<p>
+										Account Name:  {{ receiver_account_name}}<br>
+										Account Number: {{ receiver_account_number}}<br>
+										Bank: {{ receiver_bank_name}}<br>
+										Purpose: {{purpose}}<br>
+										Amount: N{{amount}}<br>
+										Phone: {{ receiver_phone}}<br>
+										Status: {{ status}}<br>
+										Time Left: <span class = "text-danger"> {{timeleft}} .</span>
+										<img src = "{{pop}}" width = "100" height = "150" class = "img-fluid">
+									</p>
+								</div>
+							</div>
+						</div>
+					{{/each}}
+				{{/if}}
+				{{#if chat}}
+					{{#each chat}}
+						<div class="row">
+							<div class="col-md-12">
+								<div class="card ">
+									<div class="card-header ">
+										<h5 class="card-title">Payment Details</h5>
+							   
+									</div>
+								<div class="card-body ">									
+									<p class = "text-danger"><b>
+										There is an issue with this payment, please contact the admin with the payment's order_id.
+									</p>
+									<br>
+									<p>
+										Account Name:  {{ receiver_account_name}}<br>
+										Account Number: {{ receiver_account_number}}<br>
+										Bank: {{ receiver_bank_name}}<br>
+										Purpose: {{purpose}}<br>
+										Amount: N{{amount}}<br>
+										Phone: {{ receiver_phone}}<br>
+										Status: {{ status}}<br>
+										Time Left: <span class = "text-danger"> {{timeleft}} .</span>
+										<img src = "{{pop}}" class = "img-fluid">
+									</p>
+								</div>
+							</div>
+						</div>
+					{{/each}}
+				{{/if}}
+				{{#if receivingact}}
+					{{#each receivingact}}
+						<div class="row">
+							<div class="col-md-12">
+								<div class="card ">
+									<div class="card-header ">
+										<h5 class="card-title">Payment Details</h5>
+							   
+									</div>
+								<div class="card-body ">									
+									<p class = "text-danger"><b>
+										You will receive payment from {{payer_fullname}} before {{expire}}
+									<br>
+									<p>
+										Payer Name:  {{ payer_fullname}}<br>										
+										Amount: N1,000<br>
+										Phone: {{ payer_phone}}<br>
+										Status: {{ status}}<br>
+										Purpose: {{purpose}}<br>
+										Time Left: <span class = "text-danger"> {{timeleft}} .</span>
+										Purpose: {{purpose}}
+										<div class = "form-group">
+											<form action = "/confirm-payment-act/{{order_id}}" method = "post">
+												<button class = "btn btn-primary" id = "feedenter2" type= "submit">Confirm payment</button></post>
+										</div>
+									</p>
+								</div>
+							</div>
+						</div>
+					{{/each}}
+				{{/if}}
+				{{#if receivingbonus}}
+					{{#each receivingbonus}}
+						<div class="row">
+							<div class="col-md-12">
+								<div class="card ">
+									<div class="card-header ">
+										<h5 class="card-title">Payment Details</h5>
+							   
+									</div>
+								<div class="card-body ">									
+									<p class = "text-danger"><b>
+										You will receive payment from {{payer_fullname}} before {{expire}}
+									<br>
+									<p>
+										Payer Name:  {{ payer_fullname}}<br>										
+										Amount: N{{amount}}<br>
+										Phone: {{ payer_phone}}<br>
+										Status: {{ status}}<br>
+										Time Left: <span class = "text-danger"> {{timeleft}} .</span>
+										Purpose: {{purpose}}
+										<div class = "form-group">
+											<form action = "/confirm-payment/{{order_id}}/{{receiving_order}}" method = "post">
+												<button class = "btn btn-primary" id = "feedenter2" type= "submit">Confirm payment</button></post>
+										</div>
+									</p>
+								</div>
+							</div>
+						</div>
+					{{/each}}
+				{{/if}}
+				{{#if receivinguser}}
+					{{#each receivinguser}}
+						<div class="row">
+							<div class="col-md-12">
+								<div class="card ">
+									<div class="card-header ">
+										<h5 class="card-title">Payment Details</h5>
+							   
+									</div>
+								<div class="card-body ">									
+									<p class = "text-danger"><b>
+										Your sponsor  will receive payment from {{payer_fullname}} before {{expire}} on your behalf
+									<br>
+									<p>
+										Payer Name:  {{ payer_fullname}}<br>										
+										Amount: N{{amount}}<br>
+										Phone: {{ payer_phone}}<br>
+										Status: {{ status}}<br>
+										Time Left: <span class = "text-danger"> {{timeleft}} .</span>
+										Purpose: {{purpose}}
+									</p>
+								</div>
+							</div>
+						</div>
+					{{/each}}
+				{{/if}}
+				{{#if receivingmatrix}}
+					{{#each receivingmatrix}}
+						<div class="row">
+							<div class="col-md-12">
+								<div class="card ">
+									<div class="card-header ">
+										<h5 class="card-title">Payment Details</h5>
+							   
+									</div>
+								<div class="card-body ">									
+									<p class = "text-danger"><b>
+										You will receive payment from {{payer_fullname}} before {{expire}}
+									<br>
+									<p>
+										Payer Name:  {{ payer_fullname}}<br>										
+										Amount: N{{amount}}<br>
+										Phone: {{ payer_phone}}<br>
+										Status: {{ status}}<br>
+										Time Left: <span class = "text-danger"> {{timeleft}} .</span>
+										Purpose: {{purpose}}
+										<img src = "{{pop}}" width = "100" height = "150" class = "img-fluid">
+										
+										<div class = "form-group">
+											<form action = "/confirm-payment/{{order_id}}/{{receiving_order}}" method = "post">
+												<button class = "btn btn-primary" id = "feedenter2" type= "submit">Confirm payment</button></form>
+										</div>
+									</p>
+								</div>
+							</div>
+						</div>
+					{{/each}}
+				{{/if}}
+			</div>
+		  </div>
+		</div>
+	  </div>
+	  <div class="card-footer ">
+		<hr>
+		<div class="stats">
+		  <i class="fa fa-history"></i> Updated 3 minutes ago
+		</div>
+	  </div>
+	</div>
+  </div>
+</div>
+{{> spagef}}
+{{/if}}

@@ -1,0 +1,47 @@
+{{> spageh}}
+{{> spagenav}}
+
+	<div class="content">
+	 {{#if errors}}
+  {{#each errors}}
+  <div class="alert alert-danger">
+    {{this.msg}}
+  </div>
+  {{/each}}
+{{/if}}
+   <div class="row">
+   <div class="col-md-6">
+            <div class="card card-user">
+              <div class="card-header">
+                <h5 class="card-title"> Upload POP </h5>
+              </div>
+              <div class="card-body">
+                <form enctype="multipart/form-data" action = "/uploadpop/{{order_id}}" method = "post">
+                
+
+			{{#if error}}
+			<div class="alert alert-danger">
+					{{error}}
+				  </div>
+			{{/if}}
+                  
+                      
+                    
+                      <div class="">
+                        <label>POP</label>
+                        <input type = "file" class="" placeholder = "pop" name = "pop" value="{{trans.pop}}" required/>
+                      
+                    </div>
+                  
+                  <div class="form-group"> <button class = "btn btn-primary" type = "submit"> Upload POP</button>
+                  </div>
+                  
+                </form>
+              </div>
+            </div>
+            
+          </div>
+          </div>
+          </div>
+          </div>
+         {{> spagef}}
