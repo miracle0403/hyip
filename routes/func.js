@@ -177,3 +177,56 @@ exports.spamActi = function(currentUser, req, res){
 		});
 	});
 }
+
+exports.fillup = function(username, receiver){
+	db.query('INSERT INTO ftree (order_id, username) VALUES (?,?)', [resu.orderid, username],  function(err, results, fields){
+		if (err) throw err;
+		db.query('SELECT totalamount, amount FROM feeder_tree WHERE order_id = ? and username = ?', [receiver.order_id, receiver.username], function ( err, results, fields ){
+			if( err ) throw err;
+			var resu = results[0];
+			if(resu.amount === 0){
+				db.query('UPDATE ftree SET a = ? WHERE orderid = ?', [username, receiver.order_id], function ( err, results, fields ){
+					if( err ) throw err;
+					db.query('SELECT receiving_order FROM transactions WHERE order_id = ? and payer_username = ?', [receiver.order_id, receiver.username], function ( err, results, fields ){
+						if( err ) throw err;
+						var reorder = results[0].receiving_order;
+						db.query('SELECT a, b FROM ftree WHERE order_id = ? ', [reorder], function ( err, results, fields ){
+							if( err ) throw err;
+							var red = results[0];
+							if (red.a === receiver.username){
+								db.query('UPDATE ftree SET aa = ? WHERE orderid = ?', [username, reorder], function ( err, results, fields ){
+									if( err ) throw err;
+								});
+							}else if (red.b === receiver.username){
+								db.query('UPDATE ftree SET ab = ? WHERE orderid = ?', [username, reorder], function ( err, results, fields ){
+									if( err ) throw err;
+								});
+							}
+						});
+					});
+				});
+			}else if(resu.amount === 1){
+				db.query('UPDATE ftree SET ab= ? WHERE orderid = ?', [username, receiver.order_id], function ( err, results, fields ){
+					if( err ) throw err;
+					db.query('SELECT receiving_order FROM transactions WHERE order_id = ? and payer_username = ?', [receiver.order_id, receiver.username], function ( err, results, fields ){
+						if( err ) throw err;
+						var reorder = results[0].receiving_order;
+						db.query('SELECT a, b FROM ftree WHERE order_id = ? ', [reorder], function ( err, results, fields ){
+							if( err ) throw err;
+							var red = results[0];
+							if (red.a === receiver.username){
+								db.query('UPDATE ftree SET ba = ? WHERE orderid = ?', [username, reorder], function ( err, results, fields ){
+									if( err ) throw err;
+								});
+							}else if (red.b === receiver.username){
+								db.query('UPDATE ftree SET bb = ? WHERE orderid = ?', [username, reorder], function ( err, results, fields ){
+									if( err ) throw err;
+								});
+							}
+						});
+					});
+				});
+			}
+		});
+	});
+}

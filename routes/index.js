@@ -65,12 +65,23 @@ router.get('/ref=:username', function(req, res, next) {
 					db.query( 'SELECT COUNT(username) AS nousers  FROM user', function ( err, results, fields ){
 						if( err ) throw err;
 						var nousers = results[0].nousers;
-						res.render('index', { 
-							title: 'EZWIFT',
-							amount: amount,
-							activated: activated,
-							nousers: nousers,
-							mess: 'BEST P2P ONLINE PLATFORM'					
+						db.query( 'SELECT *  FROM testimonies ORDER BY date_entered DESC LIMIT 4', function ( err, results, fields ){
+							if( err ) throw err;
+							var testimonies = results;
+							res.render('index', { 
+								title: 'EZWIFT',
+								date1: testimonies[0].date_entered,
+								testimony1: testimonies[0].testimony,
+								fullname1: testimonies[0].fullname,
+								fullname2: testimonies[1].fullname,
+								testimony2: testimonies[1].testimony,
+								date2: testimonies[1].date_entered,
+								amount: amount,
+								activated: activated,
+								sponsor: username,
+								nousers: nousers,
+								mess: 'BEST P2P ONLINE PLATFORM'
+							});
 						});
 					});
 				});
@@ -243,65 +254,25 @@ router.get('/referrals', ensureLoggedIn('/login'), function(req, res, next) {
 		//console.log(results)
 		if(results.user_type === 'Administrator'){
 			var admin = results[0];
-			db.query('SELECT  username, phone, email, status, activated, full_name FROM user WHERE sponsor = ? ', [admin.username], function(err, results, fields){
+			db.query('SELECT  username, phone, email, status, activation, full_name FROM user WHERE sponsor = ? ', [admin.username], function(err, results, fields){
 				if (err) throw err;
 				var referrals = results;
-				var count = func.ref(admin.username);
-				db.query( 'SELECT COUNT(username) AS count FROM user WHERE sponsor = ?', [admin.username], function ( err, results, fields ){
+				db.query('SELECT  * FROM ftree WHERE username = ? and (a = null OR  b = null OR aa  = null OR ab  = null OR ba  = null OR bb  = null) ', [admin.username], function(err, results, fields){
 					if (err) throw err;
-					var count = results[0].count;
-					db.query( 'SELECT node.username, (COUNT(parent.username) - (sub_tree.depth + 1)) AS depth FROM feeder_tree AS node, feeder_tree AS parent, feeder_tree AS sub_parent, (SELECT node.username, (COUNT(parent.username) - 1) AS depth FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? AND node.amount < 2 GROUP BY node.username ORDER BY node.lft )AS sub_tree WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.lft BETWEEN sub_parent.lft AND sub_parent.rgt AND sub_parent.username = sub_tree.username GROUP BY node.username HAVING depth <= 1 ORDER BY node.lft;', [user.username], function ( err, results, fields ){
-						if( err ) throw err;
-						if(results.length === 0){
-							res.render('referrals', {
-								mess: 'MY REFERRALS', 
-								count: count, 
-								title: 'EZWIFT',
-								admin: admin,
-								referrals: referrals
-							});
-						}else if(result.length === 1){
-							var leg = results[0];
-							db.query( 'SELECT node.username, (COUNT(parent.username) - (sub_tree.depth + 1)) AS depth FROM feeder_tree AS node, feeder_tree AS parent, feeder_tree AS sub_parent, (SELECT node.username, (COUNT(parent.username) - 1) AS depth FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? AND node.amount < 2 GROUP BY node.username ORDER BY node.lft )AS sub_tree WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.lft BETWEEN sub_parent.lft AND sub_parent.rgt AND sub_parent.username = sub_tree.username GROUP BY node.username HAVING depth <= 1 ORDER BY node.lft;', [leg.username], function ( err, results, fields ){
-								if( err ) throw err;
-								var leg1 = results[0];
-								res.render('referrals', {
-									mess: 'MY REFERRALS', 
-									count: count, 
-									title: 'EZWIFT',
-									admin: admin,
-									leg1: leg1.username,
-									leg: leg.username,
-									referrals: referrals
-								});
-							});
-						}else if(result.length === 2){
-							var leg = results;
-							db.query( 'SELECT node.username, (COUNT(parent.username) - (sub_tree.depth + 1)) AS depth FROM feeder_tree AS node, feeder_tree AS parent, feeder_tree AS sub_parent, (SELECT node.username, (COUNT(parent.username) - 1) AS depth FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? AND node.amount < 2 GROUP BY node.username ORDER BY node.lft )AS sub_tree WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.lft BETWEEN sub_parent.lft AND sub_parent.rgt AND sub_parent.username = sub_tree.username GROUP BY node.username HAVING depth <= 1 ORDER BY node.lft;', [leg[0].username], function ( err, results, fields ){
-								if( err ) throw err;
-								var leg1 = results;
-								db.query( 'SELECT node.username, (COUNT(parent.username) - (sub_tree.depth + 1)) AS depth FROM feeder_tree AS node, feeder_tree AS parent, feeder_tree AS sub_parent, (SELECT node.username, (COUNT(parent.username) - 1) AS depth FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? AND node.amount < 2 GROUP BY node.username ORDER BY node.lft )AS sub_tree WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.lft BETWEEN sub_parent.lft AND sub_parent.rgt AND sub_parent.username = sub_tree.username GROUP BY node.username HAVING depth <= 1 ORDER BY node.lft;', [leg[1].username], function ( err, results, fields ){
-									if( err ) throw err;
-									var leg2 = results;
-									res.render('referrals', {
-										mess: 'MY REFERRALS', 
-										count: count, 
-										title: 'EZWIFT',
-										admin: admin,
-										leg2: leg2,
-										leg1: leg1,
-										leg: leg,
-										referrals: referrals
-									});
-								});
-							});
-						}					
+					var ftree = results[0];
+					res.render('referrals', {
+						mess: 'MY REFERRALS', 
+						count: count, 
+						title: 'EZWIFT',
+						admin: admin,
+						ftree: ftree,
+						referrals: referrals
 					});
 				});
 			});
 		}else{
 			var user = results[0];
-			db.query('SELECT  username, phone, email, status, activated, full_name FROM user WHERE sponsor = ? ', [user.username], function(err, results, fields){
+			db.query('SELECT  username, phone, email, status, activation, full_name FROM user WHERE sponsor = ? ', [user.username], function(err, results, fields){
 				if (err) throw err;
 				var referrals = results;
 				var count = func.ref(user.username);
@@ -318,7 +289,7 @@ router.get('/referrals', ensureLoggedIn('/login'), function(req, res, next) {
 								user: user,
 								referrals: referrals
 							});
-						}else if(result.length === 1){
+						}else if(results.length === 1){
 							var leg = results[0];
 							db.query( 'SELECT node.username, (COUNT(parent.username) - (sub_tree.depth + 1)) AS depth FROM feeder_tree AS node, feeder_tree AS parent, feeder_tree AS sub_parent, (SELECT node.username, (COUNT(parent.username) - 1) AS depth FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? AND node.amount < 2 GROUP BY node.username ORDER BY node.lft )AS sub_tree WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.lft BETWEEN sub_parent.lft AND sub_parent.rgt AND sub_parent.username = sub_tree.username GROUP BY node.username HAVING depth <= 1 ORDER BY node.lft;', [leg.username], function ( err, results, fields ){
 								if( err ) throw err;
@@ -2011,6 +1982,7 @@ router.post('/confirm-payment/:order_id/:receive', authentificationMiddleware()
 							res.redirect('/dashboard/#mergeerror');
 						}else{
 							if(trans.purpose === 'feeder_matrix' && trans.amount === 10000){
+								genfunc.fillup(users.username, ord, order_id)
 								db.query('CALL confirm_feeder1(?,?,?)', [trans.order_id, trans.receiver_username, trans.payer_username ], function(err, results, fields){
 									if (err) throw err;
 									var success = 'Payment confirmation was successful!';

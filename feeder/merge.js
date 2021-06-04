@@ -20,9 +20,12 @@ exports.merge = function (bio, req, res){
 			if(results.length === 0){
 				db.query('INSERT INTO feeder_tree(username, sponsor,  lft, rgt,  order_id, status, level_two) VALUES(?, ?, ?, ?, ?, ?, ?)', [bio.username, bio.sponsor, 1, 2, order_id, 'confirmed', 'Yes'], function(err, results, fields){
 					if(err) throw err; 
-					var success = 'Matrix created!';
-					req.flash('success', success);
-					res.redirect('/dashboard')
+					db.query('INSERT INTO ftree (orderid, username) VALUES (?,?)', [order_id, bio.username],  function(err, results, fields){
+						if (err) throw err;
+						var success = 'Matrix created!';
+						req.flash('success', success);
+						res.redirect('/dashboard')
+					});
 				});
 			}else{
 				db.query('SELECT * FROM feeder_tree WHERE username = ? AND status = ?', [bio.sponsor, 'confirmed'], function(err, results, fields){
