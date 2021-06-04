@@ -1,68 +1,91 @@
-<body class="landing-page sidebar-collapse">
-  <!-- Navbar -->
-  <nav class="navbar navbar-expand-lg bg-transparent fixed-top navbar-transparent " color-on-scroll="400">
-    <div class="container">
-      <div class="dropdown button-dropdown">
-        <a href="#pablo" class="dropdown-toggle" id="navbarDropdown" data-toggle="dropdown">
-          <span class="button-bar"></span>
-          <span class="button-bar"></span>
-          <span class="button-bar"></span>
-        </a>
-       <!-- <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-          <a class="dropdown-header">Dropdown header</a>
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">Separated link</a>
-          <div class="dropdown-divider"></div>
-          <a class="dropdown-item" href="#">One more separated link</a>
-        </div>-->
-      </div>
-      <div class="navbar-translate">
-        <a class="navbar-brand" href="/" rel="tooltip"  data-placement="bottom" target="_blank">
-          {{title}}
-        </a>
-        <button class="navbar-toggler navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-bar top-bar"></span>
-          <span class="navbar-toggler-bar middle-bar"></span>
-          <span class="navbar-toggler-bar bottom-bar"></span>
-        </button>
-      </div>
-      <div class="collapse navbar-collapse justify-content-end" id="navigation" data-nav-image="../assets/img/blurred-image-1.jpg">
-        <ul class="navbar-nav">
-            <li class="nav-item">
-            <a class="nav-link" href="/ref={{username}}">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/faq/ref={{username}}">FAQ</a>
-          </li>
-		  
-		  <li class="nav-item">
-            <a class="nav-link" href="/ref={{username}}/#about">About Us</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="/testimonials/ref={{username}}">
-             
-              <p class="d-lg-none d-xl-none">Testimonials</p>
-            </a>
-          </li>
-         <li class="nav-item">
-            <a class="nav-link" href="/howitworks/ref={{username}}/#howitworks">HOW IT WORKS</a>
-          </li>
-		  {{#if isAuthenticated}}
-		  <li class="nav-item">
-            <a class="nav-link" href="/logout">Sign Out</a>
-          </li>
-		  {{else}}
-		  <li class="nav-item">
-            <a class="nav-link" href="/register/ref={{username}}">Sign Up</a>
-          </li>
-		  <li class="nav-item">
-            <a class="nav-link" href="/login/ref={{username}}">Sign In</a>
-          </li>
-		  {{/if}}
-        </ul>
-      </div>
-    </div>
-  </nav>
+<body class="home page-template-default page page-id-4 logged-in admin-bar no-customize-support wp-embed-responsive customizer-styles-applied singular image-filters-enabled hide-homepage-title mobile-nav-side highlander-enabled highlander-light">
+
+		
+
+	
+<script type="text/javascript">
+/* <![CDATA[ */
+var clickDebugLink;
+
+jQuery(document).ready( function($) {
+	var single = false, w = 1000,
+		supe = false;
+
+	$(document.body).load(function(){ $('#wpadminbar img.grav-hashed').removeClass('grav-hashed'); }); // hack to hide the gravatar hovercard
+
+	if ( single && supe )
+		w = 1385;
+	else if ( supe )
+		w = 1200;
+
+	// debug bar extra
+	clickDebugLink = function( parent_id, obj ) {
+
+		$('#'+parent_id).children('div').hide();
+
+		document.getElementById( obj.href.substr( obj.href.indexOf( '#' ) + 1 ) ).style.display = 'block';
+		$( obj.href.substr( obj.href.indexOf( '#' ) ) ).show()
+
+		$(obj).parent().addClass('current').siblings('li').removeClass('current');
+
+		return false;
+	};
+
+	$( '#wpadminbar #wp-admin-bar-shortlink' ).click( function() {
+		$( '#adminbar-shortlink-input' ).select();
+	});
+
+	// skip tap-to-hover on site switcher for mobile
+	if ( 'ontouchstart' in window ) {
+		$('#wp-admin-bar-switch-site').on( 'touchstart', function( event ) {
+			if ( $( window ).width() > 782 ) {
+				return;
+			}
+			event.stopPropagation();
+			$( event.target ).first( 'a' ).click();
+		});
+	}
+
+});
+/* ]]> */
+</script>
+	<div class="wpcom-bubble action-bubble">
+		<div class="bubble-txt"></div>
+	</div>
+	<script type="text/javascript">function hideBubble() { jQuery('body').append( jQuery( 'div.wpcom-bubble' ).removeClass( 'fadein' ) ).off( 'click.bubble touchstart.bubble' ); jQuery(document).off( 'scroll.bubble' ); };</script>
+		<script type="text/javascript">
+	jQuery( '#wp-admin-bar-jumptotop-button-menu a' ).click( function( e ) {
+		e.preventDefault();
+		jQuery( 'html, body' ).animate( { scrollTop: 0 }, 'fast' );
+	} );
+	function hideShowTbJumpToTop() {
+		var total_width = 0;
+		// Calculate total width taken by items minus our button to see if it'll
+		// overlap with other toolbar menus.
+		jQuery( '#wp-admin-bar-root-default > li' ).each( function() {
+			var self = jQuery( this );
+			if ( 'wp-admin-bar-jumptotop-button-menu' != self.attr( 'id' ) )
+				total_width += self.width();
+		});
+		if ( jQuery( '#wp-admin-bar-jumptotop-button-menu' ).position()['left'] - total_width < 10 ) {
+			jQuery( '#jumptotop' ).animate( { 'top': '-50px' }, 'fast' );
+		} else if (  jQuery( window ).scrollTop() >= 350 && parseInt( jQuery( '#jumptotop' ).css( 'top' ) ) < 0 ) {
+			if ( jQuery( '#wp-admin-bar-jumptotop-button-menu' ).position()['left'] - total_width < 10 )
+			   return;
+			jQuery( '#jumptotop' ).animate( { 'top': 0 }, 'fast' );
+		} else if (  jQuery( window ).scrollTop() < 1 && parseInt( jQuery( '#jumptotop' ).css( 'top' ) ) >= 0 ) {
+			jQuery( '#jumptotop' ).animate( { 'top': '-50px' }, 'fast' );
+		}
+	}
+	// handle on page load if auto scrolling to a position
+	hideShowTbJumpToTop();
+	// bind to scrolll event
+	var jumpToTopTimer = null;
+	jQuery( window ).scroll( function() {
+		clearTimeout( jumpToTopTimer );
+		jumpToTopTimer = setTimeout( jumpToTopRefresh, 150 );
+	} );
+	var jumpToTopRefresh = function() {
+		hideShowTbJumpToTop();
+	};
+	</script>

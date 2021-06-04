@@ -26,9 +26,27 @@ var ensureLoggedIn = require( 'connect-ensure-login' ).ensureLoggedIn
 const saltRounds = bcrypt.genSaltSync(10);
 var formidable = require('formidable');
 
-/* GET home page. 
+/* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'EZWIFT' });
+	db.query( 'SELECT COUNT(username) AS noactivated  FROM user WHERE activation = ?', ['Yes'], function ( err, results, fields ){
+		if( err ) throw err;
+		var activated = results[0].noactivated;
+		db.query( 'SELECT SUM(amount) AS amount  FROM transactions',  function ( err, results, fields ){
+			if( err ) throw err;
+			var amount = results[0].amount;
+			db.query( 'SELECT COUNT(username) AS nousers  FROM user', function ( err, results, fields ){
+				if( err ) throw err;
+				var nousers = results[0].nousers;
+				res.render('index', { 
+					title: 'EZWIFT',
+					amount: amount,
+					activated: activated,
+					nousers: nousers,
+					mess: 'BEST P2P ONLINE PLATFORM'					
+				});
+			});
+		});
+	});
 });
 
 router.get('/ref=:username', function(req, res, next) {
@@ -38,7 +56,25 @@ router.get('/ref=:username', function(req, res, next) {
 		if(results.length === 0){
 			res.redirect('/');
 		}else{
-			res.render('index', { title: 'EZWIFT', username: username});
+			db.query( 'SELECT COUNT(username) AS noactivated  FROM user WHERE activation = ?', ['Yes'], function ( err, results, fields ){
+				if( err ) throw err;
+				var activated = results[0].noactivated;
+				db.query( 'SELECT SUM(amount) AS amount  FROM transactions',  function ( err, results, fields ){
+					if( err ) throw err;
+					var amount = results[0].amount;
+					db.query( 'SELECT COUNT(username) AS nousers  FROM user', function ( err, results, fields ){
+						if( err ) throw err;
+						var nousers = results[0].nousers;
+						res.render('index', { 
+							title: 'EZWIFT',
+							amount: amount,
+							activated: activated,
+							nousers: nousers,
+							mess: 'BEST P2P ONLINE PLATFORM'					
+						});
+					});
+				});
+			});
 		}
 	});
 });
@@ -48,7 +84,7 @@ router.get('/ref=', function(req, res, next) {
 });
 
 
-/* GET faq. 
+/* GET faq. */
 router.get('/faq', function(req, res, next) {
   res.render('faq', { title: 'EZWIFT', mess: 'FAQ'});
 });
@@ -72,7 +108,7 @@ router.get('/faq/ref=', function(req, res, next) {
 
 
 
-/* GET howitworks. 
+/* GET howitworks.*/ 
 router.get('/howitworks', function(req, res, next) {
   res.render('howitworks', { title: 'EZWIFT', mess: 'HOW IT WORKS'});
 });
@@ -197,7 +233,7 @@ router.get('/iPaid/:order_id/', ensureLoggedIn('/login'), function(req, res, nex
 });
 
 
-referrals
+//referrals
 router.get('/referrals', ensureLoggedIn('/login'), function(req, res, next) {
 	
   var currentUser = req.session.passport.user.user_id;
@@ -211,20 +247,113 @@ router.get('/referrals', ensureLoggedIn('/login'), function(req, res, next) {
 				if (err) throw err;
 				var referrals = results;
 				var count = func.ref(admin.username);
-				db.query( 'SELECT node.username, (COUNT(parent.username) - (sub_tree.depth + 1)) AS depth FROM feeder_tree AS node, feeder_tree AS parent, feeder_tree AS sub_parent, (SELECT node.username, (COUNT(parent.username) - 1) AS depth FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? AND node.amount < 2 GROUP BY node.username ORDER BY node.lft )AS sub_tree WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.lft BETWEEN sub_parent.lft AND sub_parent.rgt AND sub_parent.username = sub_tree.username GROUP BY node.username HAVING depth <= 1 ORDER BY node.lft;', [user.username], function ( err, results, fields ){
-					if( err ) throw err;
-					var leg = results[0];
-					db.query( 'SELECT COUNT(username) AS count FROM user WHERE sponsor = ?', [admin.username], function ( err, results, fields ){
-						if (err) throw err;
-						var count = results[0].count;
-						res.render('referrals', {
-							mess: 'MY REFERRALS', 
-							count: count, 
-							title: 'EZWIFT',
-							admin: admin, 
-							leg: leg, 
-							referrals: referrals
-						});
+				db.query( 'SELECT COUNT(username) AS count FROM user WHERE sponsor = ?', [admin.username], function ( err, results, fields ){
+					if (err) throw err;
+					var count = results[0].count;
+					db.query( 'SELECT node.username, (COUNT(parent.username) - (sub_tree.depth + 1)) AS depth FROM feeder_tree AS node, feeder_tree AS parent, feeder_tree AS sub_parent, (SELECT node.username, (COUNT(parent.username) - 1) AS depth FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? AND node.amount < 2 GROUP BY node.username ORDER BY node.lft )AS sub_tree WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.lft BETWEEN sub_parent.lft AND sub_parent.rgt AND sub_parent.username = sub_tree.username GROUP BY node.username HAVING depth <= 1 ORDER BY node.lft;', [user.username], function ( err, results, fields ){
+						if( err ) throw err;
+						if(results.length === 0){
+							res.render('referrals', {
+								mess: 'MY REFERRALS', 
+								count: count, 
+								title: 'EZWIFT',
+								admin: admin,
+								referrals: referrals
+							});
+						}else if(result.length === 1){
+							var leg = results[0];
+							db.query( 'SELECT node.username, (COUNT(parent.username) - (sub_tree.depth + 1)) AS depth FROM feeder_tree AS node, feeder_tree AS parent, feeder_tree AS sub_parent, (SELECT node.username, (COUNT(parent.username) - 1) AS depth FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? AND node.amount < 2 GROUP BY node.username ORDER BY node.lft )AS sub_tree WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.lft BETWEEN sub_parent.lft AND sub_parent.rgt AND sub_parent.username = sub_tree.username GROUP BY node.username HAVING depth <= 1 ORDER BY node.lft;', [leg.username], function ( err, results, fields ){
+								if( err ) throw err;
+								var leg1 = results[0];
+								res.render('referrals', {
+									mess: 'MY REFERRALS', 
+									count: count, 
+									title: 'EZWIFT',
+									admin: admin,
+									leg1: leg1.username,
+									leg: leg.username,
+									referrals: referrals
+								});
+							});
+						}else if(result.length === 2){
+							var leg = results;
+							db.query( 'SELECT node.username, (COUNT(parent.username) - (sub_tree.depth + 1)) AS depth FROM feeder_tree AS node, feeder_tree AS parent, feeder_tree AS sub_parent, (SELECT node.username, (COUNT(parent.username) - 1) AS depth FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? AND node.amount < 2 GROUP BY node.username ORDER BY node.lft )AS sub_tree WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.lft BETWEEN sub_parent.lft AND sub_parent.rgt AND sub_parent.username = sub_tree.username GROUP BY node.username HAVING depth <= 1 ORDER BY node.lft;', [leg[0].username], function ( err, results, fields ){
+								if( err ) throw err;
+								var leg1 = results;
+								db.query( 'SELECT node.username, (COUNT(parent.username) - (sub_tree.depth + 1)) AS depth FROM feeder_tree AS node, feeder_tree AS parent, feeder_tree AS sub_parent, (SELECT node.username, (COUNT(parent.username) - 1) AS depth FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? AND node.amount < 2 GROUP BY node.username ORDER BY node.lft )AS sub_tree WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.lft BETWEEN sub_parent.lft AND sub_parent.rgt AND sub_parent.username = sub_tree.username GROUP BY node.username HAVING depth <= 1 ORDER BY node.lft;', [leg[1].username], function ( err, results, fields ){
+									if( err ) throw err;
+									var leg2 = results;
+									res.render('referrals', {
+										mess: 'MY REFERRALS', 
+										count: count, 
+										title: 'EZWIFT',
+										admin: admin,
+										leg2: leg2,
+										leg1: leg1,
+										leg: leg,
+										referrals: referrals
+									});
+								});
+							});
+						}					
+					});
+				});
+			});
+		}else{
+			var user = results[0];
+			db.query('SELECT  username, phone, email, status, activated, full_name FROM user WHERE sponsor = ? ', [user.username], function(err, results, fields){
+				if (err) throw err;
+				var referrals = results;
+				var count = func.ref(user.username);
+				db.query( 'SELECT COUNT(username) AS count FROM user WHERE sponsor = ?', [user.username], function ( err, results, fields ){
+					if (err) throw err;
+					var count = results[0].count;
+					db.query( 'SELECT node.username, (COUNT(parent.username) - (sub_tree.depth + 1)) AS depth FROM feeder_tree AS node, feeder_tree AS parent, feeder_tree AS sub_parent, (SELECT node.username, (COUNT(parent.username) - 1) AS depth FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? AND node.amount < 2 GROUP BY node.username ORDER BY node.lft )AS sub_tree WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.lft BETWEEN sub_parent.lft AND sub_parent.rgt AND sub_parent.username = sub_tree.username GROUP BY node.username HAVING depth <= 1 ORDER BY node.lft;', [user.username], function ( err, results, fields ){
+						if( err ) throw err;
+						if(results.length === 0){
+							res.render('referrals', {
+								mess: 'MY REFERRALS', 
+								count: count, 
+								title: 'EZWIFT',
+								user: user,
+								referrals: referrals
+							});
+						}else if(result.length === 1){
+							var leg = results[0];
+							db.query( 'SELECT node.username, (COUNT(parent.username) - (sub_tree.depth + 1)) AS depth FROM feeder_tree AS node, feeder_tree AS parent, feeder_tree AS sub_parent, (SELECT node.username, (COUNT(parent.username) - 1) AS depth FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? AND node.amount < 2 GROUP BY node.username ORDER BY node.lft )AS sub_tree WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.lft BETWEEN sub_parent.lft AND sub_parent.rgt AND sub_parent.username = sub_tree.username GROUP BY node.username HAVING depth <= 1 ORDER BY node.lft;', [leg.username], function ( err, results, fields ){
+								if( err ) throw err;
+								var leg1 = results[0];
+								res.render('referrals', {
+									mess: 'MY REFERRALS', 
+									count: count, 
+									title: 'EZWIFT',
+									user: user,
+									leg1: leg1.username,
+									leg: leg.username,
+									referrals: referrals
+								});
+							});
+						}else if(result.length === 2){
+							var leg = results;
+							db.query( 'SELECT node.username, (COUNT(parent.username) - (sub_tree.depth + 1)) AS depth FROM feeder_tree AS node, feeder_tree AS parent, feeder_tree AS sub_parent, (SELECT node.username, (COUNT(parent.username) - 1) AS depth FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? AND node.amount < 2 GROUP BY node.username ORDER BY node.lft )AS sub_tree WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.lft BETWEEN sub_parent.lft AND sub_parent.rgt AND sub_parent.username = sub_tree.username GROUP BY node.username HAVING depth <= 1 ORDER BY node.lft;', [leg[0].username], function ( err, results, fields ){
+								if( err ) throw err;
+								var leg1 = results;
+								db.query( 'SELECT node.username, (COUNT(parent.username) - (sub_tree.depth + 1)) AS depth FROM feeder_tree AS node, feeder_tree AS parent, feeder_tree AS sub_parent, (SELECT node.username, (COUNT(parent.username) - 1) AS depth FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? AND node.amount < 2 GROUP BY node.username ORDER BY node.lft )AS sub_tree WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.lft BETWEEN sub_parent.lft AND sub_parent.rgt AND sub_parent.username = sub_tree.username GROUP BY node.username HAVING depth <= 1 ORDER BY node.lft;', [leg[1].username], function ( err, results, fields ){
+									if( err ) throw err;
+									var leg2 = results;
+									res.render('referrals', {
+										mess: 'MY REFERRALS', 
+										count: count, 
+										title: 'EZWIFT',
+										user: user,
+										leg2: leg2,
+										leg1: leg1,
+										leg: leg,
+										referrals: referrals
+									});
+								});
+							});
+						}					
 					});
 				});
 			});
