@@ -13,26 +13,26 @@
    <div class="col-md-12">
             <div class="card card-user">
               <div class="card-header">
-                <h5 class="card-title"> {{mess}} </h5>
+                <h5 class="card-title  text-center"> {{mess}} </h5>
               </div>
               <div class="card-body">
                 <p class = "text-big text-success">
                 	Hello {{#if admin}} {{admin.username}} {{else}} {{bio.username}}{{/if}}!
                 </p> 
                 <p>
-                You have {{count}} referrals! 
+                You have {{count}} referral(s)! 
                 </p>
                 <p>
                 Your referral link is <a id = "reflink" href ="/register/ref={{#if admin}}{{admin.username}}{{else}}{{bio.username}}{{/if}}"> ezwift.online/register/ref={{#if admin}}{{admin.username}}{{else}}{{bio.username}}{{/if}}</a>
                 </p>
-                <h5>MY FEEDER LEG</h5>
+                <h5 class = "text-center">MY FEEDER LEG</h5>
                 {{#if leg}}
                 	Left Leg: {{leg.a}}<br>
                 	Center Leg: {{leg.b}}<br>
                 	Right Leg: {{leg.c}}
                 {{/if}}
                 
-                <h5>MY REFFERRAL LIST </h5>
+                <h5 class = "text-center">MY REFFERRAL LIST </h5>
                 <div class = "row">
                 {{#if referrals}}
                 {{#each referrals}}

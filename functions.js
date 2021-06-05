@@ -44,9 +44,9 @@ exports.fillup = function(username, receiver, order){
 					if( err ) throw err;
 					db.query('SELECT receiving_order FROM transactions WHERE order_id = ? and payer_username = ?', [receiver.order_id, receiver.username], function ( err, results, fields ){
 						if( err ) throw err;
-						if(results.length > 1){
+						if(results.length === 1){
 							var reorder = results[0].receiving_order;
-							db.query('SELECT a, b FROM ftree WHERE order_id = ? ', [reorder], function ( err, results, fields ){
+							db.query('SELECT a, b FROM ftree WHERE orderid = ? ', [reorder], function ( err, results, fields ){
 								if( err ) throw err;
 								var red = results[0];
 								if (red.a === receiver.username){
@@ -63,13 +63,13 @@ exports.fillup = function(username, receiver, order){
 					});
 				});
 			}else if(resu.amount === 2){
-				db.query('UPDATE ftree SET ab= ? WHERE orderid = ?', [username, receiver.order_id], function ( err, results, fields ){
+				db.query('UPDATE ftree SET b= ? WHERE orderid = ?', [username, receiver.order_id], function ( err, results, fields ){
 					if( err ) throw err;
 					db.query('SELECT receiving_order FROM transactions WHERE order_id = ? and payer_username = ?', [receiver.order_id, receiver.username], function ( err, results, fields ){
 						if( err ) throw err;
-						if(results.length > 1){
+						if(results.length === 1){
 							var reorder = results[0].receiving_order;
-							db.query('SELECT a, b FROM ftree WHERE order_id = ? ', [reorder], function ( err, results, fields ){
+							db.query('SELECT a, b FROM ftree WHERE orderid = ? ', [reorder], function ( err, results, fields ){
 								if( err ) throw err;
 								var red = results[0];
 								if (red.a === receiver.username){

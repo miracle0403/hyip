@@ -31,7 +31,7 @@ const options = {
   onConnectionRelease: () => { console.log("Release"); },
   mySQLSettings: {
 	host: "localhost",
- user: "miracle0403",
+  user: "miracle0403",
   password: 'MIracle1994@I',
   database: "ezwiftdb1",
     port: '3306',
@@ -51,7 +51,7 @@ const mySQL = PoolManager(options);
 
 var pool  = mySQL.raw.createConnection({
 	host: "localhost",
- user: "miracle0403",
+  user: "miracle0403",
   password: 'MIracle1994@I',
   database: "ezwiftdb1"
 });

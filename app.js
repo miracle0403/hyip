@@ -77,7 +77,7 @@ app.use(helmet());
 
 var options = {
 	host: "localhost",
- user: "miracle0403",
+  user: "miracle0403",
   password: 'MIracle1994@I',
   database: "ezwiftdb1"
 }

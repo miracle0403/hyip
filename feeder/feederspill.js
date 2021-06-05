@@ -45,9 +45,38 @@ exports.feederspill = function(bio, req, res, order_id, date){
 						});
 					});
 				}else{
-					var error = "Something went wrong";
-					req.flash('mergeerror', error);
-					res.redirect('/dashboard/#mergeerror');
+					if(feeder.order_id === feeder1[0].order_id){
+						console.log('feeder 1 3');
+						var receiver = feeder1[0];
+						var purpose = 'feeder_matrix';
+						db.query('CALL leafadd(?,?,?,?)', [receiver.username, order_id, bio.username, bio.sponsor], function(err, results, fields){
+							if (err) throw err;
+							db.query('CALL placefeeder(?,?,?,?,?,?,?)', [bio.username, purpose, bio.sponsor, receiver.username, order_id, date, receiver.order_id], function(err, results, fields){
+								if (err) throw err;
+								var success = 'You have been assigned to pay someone';
+								req.flash('success', success);
+								res.redirect('/dashboard')
+							});
+						});
+					}else if (feeder.order_id === feeder2[0].order_id){
+						//place in feeder1
+						console.log('feeder 2 3');
+						var purpose = 'feeder_matrix';
+						var receiver = feeder2[0];
+						db.query('CALL leafadd(?,?,?,?)', [receiver.username, order_id, bio.username, bio.sponsor], function(err, results, fields){
+							if (err) throw err;
+							db.query('CALL placefeeder(?,?,?,?,?,?,?)', [bio.username, purpose, bio.sponsor, receiver.username, order_id, date, receiver.order_id], function(err, results, fields){
+								if (err) throw err;
+								var success = 'You have been assigned to pay someone';
+								req.flash('success', success);
+								res.redirect('/dashboard')
+							});
+						});
+					}else{
+						var error = 'Something went wrong';
+						req.flash('mergeerror', error);
+						res.redirect('/dashboard')
+					}
 				}				
 			});
 		});
