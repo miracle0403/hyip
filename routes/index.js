@@ -95,6 +95,115 @@ router.get('/ref=', function(req, res, next) {
 });
 
 
+/*forgot password*/
+router.get('/forgotpassword', function(req, res, next) {	
+	const flashMessages = res.locals.getMessages( );
+	if(flashMessages.error){
+		res.render('forgotpassword', { 
+			title: 'EZWIFT', 
+			mess: 'Forgot Password?',
+			showErrors: true,
+			error: flashMessages.error
+		});
+	}else if(flashMessages.success){
+		res.render('forgotpassword', { 
+			title: 'EZWIFT', 
+			mess: 'Forgot Password?',
+			showSuccess: true,
+			success: flashMessages.success
+		});
+	} else{
+		res.render('forgotpassword', { 
+			title: 'EZWIFT', 
+			mess: 'Forgot Password?'
+		});
+	} 
+});
+
+router.get('/forgotpassword/ref=:username', function(req, res, next) {
+	var username = req.params.username;
+	db.query( 'SELECT username FROM user WHERE username = ?', [username], function ( err, results, fields ){
+		if( err ) throw err;
+		if(results.length === 0){
+			res.redirect('/forgotpassword');
+		}else{
+			const flashMessages = res.locals.getMessages( );
+			if(flashMessages.error){
+				res.render('forgotpassword', { 
+					title: 'EZWIFT', 
+					mess: 'Forgot Password?',
+					sponsor: username,
+					showErrors: true,
+					error: flashMessages.error
+				});
+			}else if(flashMessages.success){
+				res.render('forgotpassword', { 
+					title: 'EZWIFT', 
+					mess: 'Forgot Password?',
+					sponsor: username,
+					showSuccess: true,
+					success: flashMessages.success
+				});
+			} else{
+				res.render('forgotpassword', { 
+					title: 'EZWIFT', 
+					sponsor: username,
+					mess: 'Forgot Password?'
+				});
+			} 
+		}
+	});
+});
+
+
+router.get('/forgotpassword/ref=', function(req, res, next) {
+	res.redirect('/forgotpassword');
+});
+
+router.get('/forgotpassword/:pin/:email', function(req, res, next) {
+	var pin = req.params.pin;
+	var email = req.params.email;
+	db.query( 'SELECT * FROM passwordreset WHERE email = ? and link = ?', [email, pin], function ( err, results, fields ){
+		if( err ) throw err;
+	});
+	
+});	
+
+//resend password reset code
+router.get('/resendPass/email=:email/str=:str', function(req, res, next) {
+	func.preset()
+	var details = req.params;
+	console.log(details)
+	db.query( 'SELECT * FROM passwordReset WHERE email = ?  AND link = ?', [details.email, details.str], function ( err, results, fields ){
+		if( err ) throw err;
+		if(results.length === 0){
+				res.redirect('/forgotpassword');
+			}else{
+				var details = results[0];
+				var date = new Date();
+				if (details.expire <= date){
+					db.query('delete from passwordReset where link = ?', ['/' + details.email + '/' + details.str], function ( err, results, fields ){
+						var error = 'Link Expired!';
+						req.flash('error', error);
+						res.redirect('/forgotpassword');
+					});
+				}else{
+					var success = 'Link resent!'
+					var mail = require('../nodemailer/password.js')
+					//mail.passReset(details.email, details.link, details.expire);
+					res.render('forgotpassword', {
+						mess: 'Forgot Password?',
+						title: 'EZWIFT',
+						email: email,
+						str: pin,
+						success: success
+					});
+				}
+			}
+	 });
+});
+
+
 /* GET faq. */
 router.get('/faq', function(req, res, next) {
   res.render('faq', { title: 'EZWIFT', mess: 'FAQ'});
@@ -263,7 +372,7 @@ router.get('/referrals', ensureLoggedIn('/login'), function(req, res, next) {
 					if (err) throw err;
 					console.log(results)
 					var count = results[0].count;
-					db.query('SELECT  * FROM ftree WHERE username = ? and (a = null OR  b = null OR aa  = null OR ab  = null OR ba  = null OR bb  = null) ', [admin.username], function(err, results, fields){
+					db.query('SELECT  * FROM ftree WHERE username = ? and (a is null OR  b is null OR aa  is null OR ab  is null OR ba  is null OR bb  is null) ', [admin.username], function(err, results, fields){
 						if (err) throw err;
 						var ftree = results[0];
 						res.render('referrals', {
@@ -278,7 +387,29 @@ router.get('/referrals', ensureLoggedIn('/login'), function(req, res, next) {
 				});
 			});
 		}else{
-			
+			var user = users;
+			console.log(user)
+			db.query('SELECT  username, phone, email, status, activation, full_name FROM user WHERE sponsor = ? ', [user.username], function(err, results, fields){
+				if (err) throw err;
+				var referrals = results;
+				db.query('SELECT  COUNT(username) AS count FROM user WHERE sponsor = ? ', [user.username], function(err, results, fields){
+					if (err) throw err;
+					console.log(results)
+					var count = results[0].count;
+					db.query('SELECT  * FROM ftree WHERE username = ? and (a is null OR  b is null OR aa  is null OR ab  is null OR ba  is null OR bb  is null) ', [user.username], function(err, results, fields){
+						if (err) throw err;
+						var ftree = results[0];
+						res.render('referrals', {
+							mess: 'MY REFERRALS', 
+							title: 'EZWIFT',
+							user: user,
+							count: count,
+							ftree: ftree,
+							referrals: referrals
+						});
+					});
+				});
+			});
 		}
 	});
 });
@@ -1401,21 +1532,23 @@ router.post('/register', [	check('username', 'Username must be between 8 to 25 n
 									db.query('SELECT username FROM user WHERE username = ?', [sponsor], function(err, results, fields){
 										if (err) throw err;
 										if (results.length === 0){
-											db.query('SELECT user_id FROM user ', function(err, results, fields){
+											db.query('SELECT username FROM user ', function(err, results, fields){
 												if (err) throw err;
 												if (results.length === 0){
+													var sponsor = results[0].username;
 													//register user
 													bcrypt.hash(password, saltRounds,  function(err, hash){
-														db.query('INSERT INTO user (user_id, full_name, phone, username, email, password, user_type) VALUES (?,?,?,?,?,?,?)', [ 1, fullname, phone, username, email, hash, 'Administrator'],  function(err, results, fields){
+														db.query('INSERT INTO user (user_id, sponsor, full_name, phone, username, email, password, user_type) VALUES (?,?,?,?,?,?,?, ?)', [ 1, sponsor,  fullname, phone, username, email, hash, 'Administrator'],  function(err, results, fields){
 															if (err) throw err;
 															var success = 'Registration successful! please login';
 															res.render('register', {mess: 'REGISTRATION SUCCESSFUL', success: success});
 														});
 													});
 												}else{
+													var sponsor = results[0].username;
 													//register user
 													bcrypt.hash(password, saltRounds,  function(err, hash){
-														db.query('INSERT INTO user ( full_name, phone, username, email, password) VALUES (?,?,?,?,?)', [  fullname, phone, username, email, hash],  function(err, results, fields){
+														db.query('INSERT INTO user ( sponsor,  full_name, phone, username, email, password) VALUES (?,?,?,?,?)', [ sponsor,  fullname, phone, username, email, hash],  function(err, results, fields){
 															if (err) throw err;
 															var success = 'Registration successful! please login';
 															res.render('register', {mess: 'REGISTRATION SUCCESSFUL', success: success});
@@ -1704,8 +1837,33 @@ router.post('/activate', authentificationMiddleware(), function(req, res, next) 
 				req.flash('mergeerror', error);
 				res.redirect('/dashboard/#mergeerror');
 			}else{
-				db.query('SELECT * FROM user WHERE username = ? ', [details.sponsor], function(err, results, fields){
-					if (err) throw err;
+				db.query('SELECT * FROM user WHERE username = ? AND activation = ?', [details.sponsor, 'Yes'], function(err, results, fields){
+					if (err) throw err; 
+					if(results.length === 0){
+						db.query('SELECT * FROM user ', function(err, results, fields){
+							if (err) throw err; 
+							var receiver = results[0];
+							securePin.generateString(13, charSet, function(str){
+								var date = new Date();
+								var hour = date.getHours();
+								var order_id = 'act' + str + hour;
+								var dt = new Date();
+								date.setHours(date.getHours() + 3);
+								console.log(dt, date, receiver, details);
+								db.query('INSERT INTO transactions (amount, receiver_username, receiver_phone, receiver_fullname, receiver_bank_name, receiver_account_name, receiver_account_number, payer_username, payer_phone, payer_fullname, order_id, date_entered, expire, purpose) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)', [1000, receiver.username, receiver.phone, receiver.full_name, receiver.bank_name, receiver.account_name, receiver.account_number, details.username, details.phone, details.full_name, order_id, dt, date, 'activation'], function(err, results, fields){
+									if (err){
+										var error = 'something went wrong';
+										req.flash('mergeerror', error);
+										res.redirect('/dashboard/#mergeerror');
+									}else{
+										var success = 'Someone is ready to receive from you. You have only 2 hours to complete payment';
+										req.flash('success', success);
+										res.redirect('/dashboard/#success');
+									}
+								});
+							});
+						});
+					}
 					var receiver = results[0];
 					securePin.generateString(13, charSet, function(str){
 						var date = new Date();
@@ -1823,7 +1981,7 @@ router.post('/enter-feeder',authentificationMiddleware(), function(req, res, nex
 	db.query('SELECT * FROM user WHERE user_id = ?', [currentUser], function(err, results, fields){
 		if (err) throw err;
 		var user = results[0];
-		db.query('SELECT * FROM feeder_tree WHERE username = ? AND (status = ? OR status = ?)', [user.username, 'PENDING', 'unconfirmed'], function(err, results, fields){
+		db.query('SELECT username FROM feeder_tree WHERE username = ? AND (status = ? OR status = ?)', [user.username, 'PENDING', 'unconfirmed'], function(err, results, fields){
 			if (err) throw err;
 			if(results.length > 0){
 				//console.log(results)
@@ -1831,15 +1989,24 @@ router.post('/enter-feeder',authentificationMiddleware(), function(req, res, nex
 				req.flash('mergeerror', error)
 				res.redirect('/dashboard')
 			}else{
-				//check if the user has entered the matrix before now
-				db.query('SELECT * FROM feeder_tree WHERE username = ?', [user.username], function(err, results, fields){
+				db.query('SELECT * FROM feeder_tree WHERE username = ? AND totalamount < ?', [user.username, 4], function(err, results, fields){
 					if (err) throw err;
-					//console.log(user)
-					if(results.length === 0){
-						//get from sponsor
-						mergefeed1.merge(user, req, res);
+					if(results.length > 0){
+						var error = 'You have to finish a matrix cycle before you start a new one.';
+						req.flash('mergeerror', error)
+						res.redirect('/dashboard')
 					}else{
-						mergefeed1.merge1(user, req, res);
+								//check if the user has entered the matrix before now
+						db.query('SELECT * FROM feeder_tree WHERE username = ?', [user.username], function(err, results, fields){
+							if (err) throw err;
+							//console.log(user)
+							if(results.length === 0){
+								//get from sponsor
+								mergefeed1.merge(user, req, res);
+							}else{
+								mergefeed1.merge1(user, req, res);
+							}
+						});
 					}
 				});
 			}
@@ -1933,12 +2100,16 @@ router.post('/confirm-payment/:order_id/:receive', authentificationMiddleware()
 							res.redirect('/dashboard/#mergeerror');
 						}else{
 							if(trans.purpose === 'feeder_matrix' && trans.amount === 10000){
-								genfunc.fillup(users.username, ord, order_id)
-								db.query('CALL confirm_feeder1(?,?,?)', [trans.order_id, trans.receiver_username, trans.payer_username ], function(err, results, fields){
+								db.query('SELECT * FROM ftree WHERE orderid = ?', [receive], function(err, results, fields){
 									if (err) throw err;
-									var success = 'Payment confirmation was successful!';
-									req.flash('success', success);
-									res.redirect('/dashboard/#success');
+									var matrixid = results;
+									genfunc.fillup(users.username, ord, order_id, matrixid)
+									db.query('CALL confirm_feeder1(?,?,?)', [trans.order_id, trans.receiver_username, trans.payer_username ], function(err, results, fields){
+										if (err) throw err;
+										var success = 'Payment confirmation was successful!';
+										req.flash('success', success);
+										res.redirect('/dashboard/#success');
+									});
 								});
 							}else if(trans.purpose === 'feeder_matrix' && trans.amount === 15000){
 								db.query('SELECT order_id FROM feeder_tree WHERE order2 = ?', [order_id], function(err, results, fields){
@@ -1959,5 +2130,44 @@ router.post('/confirm-payment/:order_id/:receive', authentificationMiddleware()
 		});
 	});
 });
+
+
+//post password reset
+router.post('/forgotpassword',[	 check('email', 'Email must be between 7 to 50 characters').isLength(7, 50).isEmail()], function(req, res, next){
+	var email = req.body.email
+	var errors = validationResult(req).errors;
+	if (errors.length > 0){
+		res.render('passwordreset', {mess: 'Password Reset Failed', errors: errors, email: email});
+	}else{
+		db.query('SELECT email FROM user WHERE email = ?', [email], function(err, results, fields){
+			if (err) throw err;
+			if(results.length === 0){
+				var error = 'There is no user associated with this email';
+				req.flash('error', error);
+				res.redirect('/forgotpassword?');
+			}else{
+				db.query('DELETE FROM passwordreset WHERE email = ?', [email], function(err, results, fields){
+					if (err) throw err;
+					var date = new Date();
+					date.setMinutes(date.getMinutes() + 20)
+					securePin.generatePin(7,  function(pin){
+						db.query('INSERT INTO passwordReset (email, expire, link) VALUES (?,?,?)', [email, date, pin], function(err, results, fields){
+							if(err) throw err;
+							var success = 'A link has been sent to your email... Check your spam if you did not see it in your inbox.';
+							res.render('forgotpassword', {
+								mess: 'Forgot Password?',
+								title: 'EZWIFT',
+								email: email,
+								str: pin,
+								success: success
+							});
+						});
+					});
+				});
+			}
+		});
+	}
+});
+
 
 module.exports = router;

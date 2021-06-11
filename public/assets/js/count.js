@@ -1,4 +1,4 @@
-//function count( ){ 
+/*//function count( ){ 
 var countDown= new Date("May  4,  2021 15:00:00").getTime(  );
 		
  		var x = setInterval(function(){
@@ -26,5 +26,5 @@ var countDown= new Date("May  4,  2021 15:00:00").getTime(  );
 		
  	}, 1000);
  	console.log(countDown);
-//setInterval( count, 1000 );
+//setInterval( count, 1000 );*/
 

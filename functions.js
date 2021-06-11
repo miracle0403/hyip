@@ -32,14 +32,15 @@ var addmoney = function (){
 }
 
 
-exports.fillup = function(username, receiver, order){
+exports.fillup = function(username, receiver, order, matid){
 	db.query('INSERT INTO ftree (orderid, username) VALUES (?,?)', [order, username],  function(err, results, fields){
 		if (err) throw err;
 		db.query('SELECT totalamount, amount FROM feeder_tree WHERE order_id = ? and username = ?', [receiver.order_id, receiver.username], function ( err, results, fields ){
 			if( err ) throw err;
 			var resu = results[0];
 			console.log(resu, receiver, order)
-			if(resu.amount === 1){
+			if(matid[0].a === null){
+				console.log('here')
 				db.query('UPDATE ftree SET a = ? WHERE orderid = ?', [username, receiver.order_id], function ( err, results, fields ){
 					if( err ) throw err;
 					db.query('SELECT receiving_order FROM transactions WHERE order_id = ? and payer_username = ?', [receiver.order_id, receiver.username], function ( err, results, fields ){
@@ -62,8 +63,8 @@ exports.fillup = function(username, receiver, order){
 						}
 					});
 				});
-			}else if(resu.amount === 2){
-				db.query('UPDATE ftree SET b= ? WHERE orderid = ?', [username, receiver.order_id], function ( err, results, fields ){
+			}else if(matid[0].b === null){
+				db.query('UPDATE ftree SET b = ? WHERE orderid = ?', [username, receiver.order_id], function ( err, results, fields ){
 					if( err ) throw err;
 					db.query('SELECT receiving_order FROM transactions WHERE order_id = ? and payer_username = ?', [receiver.order_id, receiver.username], function ( err, results, fields ){
 						if( err ) throw err;

@@ -87,7 +87,7 @@
               <div class="card-body ">
                 
                 <p class = "text-danger"><b>
-                Pay {{pending.receiver_fullname}} N1000 before {{pending.expire}}.</b>
+                Pay {{pending.receiver_fullname}} N1000 before <span id = "expirependingact"> {{pending.expire}}. </span></b>
                 </p>
                 <br>
                 <p>
@@ -463,7 +463,7 @@
 				<div class="card-body ">
 				
 						<p class = "text-danger"><b>
-							Pay {{receiver_username}} N{{amount}} before {{ expire}}.</b>
+							Pay {{receiver_username}} N{{amount}} before <span id = "expirenopop"> {{ expire}}. </span></b>
 						</p>
 						<br>
 						<p>
@@ -474,7 +474,7 @@
 							Amount: N{{amount}}<br>
 							Phone: {{ receiver_phone}}<br>
 							Status: {{ status}}<br>
-							Time Left: <span class = "text-danger"> {{timeleft}} .</span>
+							Time Left: <span class = "text-danger" id = "nopopleft"> .</span>
 						</p>						   
 				   
 					
@@ -496,7 +496,7 @@
 									</div>
 								<div class="card-body ">									
 									<p class = "text-danger"><b>
-										You claimed to pay {{ receiver_fullname}} N{{amount}}. Notify {{receiver_fullname}}  to confirm your payment before {{  expire}}.</b>
+										You claimed to pay {{ receiver_fullname}} N{{amount}}. Notify {{receiver_fullname}}  to confirm your payment before <span id = "expirepop">{{  expire}}.</span></b>
 									</p>
 									<br>
 									<p>
@@ -507,7 +507,7 @@
 										Amount: N{{amount}}<br>
 										Phone: {{ receiver_phone}}<br>
 										Status: {{ status}}<br>
-										Time Left: <span class = "text-danger"> {{timeleft}} .</span>
+										Time Left: <span class = "text-danger" id = "popleft">.</span><br><br>
 										<img src = "{{pop}}" width = "100" height = "150" class = "img-fluid">
 									</p>
 								</div>
@@ -576,62 +576,7 @@
 						</div>
 					{{/each}}
 				{{/if}}
-				{{#if receivingbonus}}
-					{{#each receivingbonus}}
-						<div class="row">
-							<div class="col-md-12">
-								<div class="card ">
-									<div class="card-header ">
-										<h5 class="card-title">Payment Details</h5>
-							   
-									</div>
-								<div class="card-body ">									
-									<p class = "text-danger"><b>
-										You will receive payment from {{payer_fullname}} before {{expire}}
-									<br>
-									<p>
-										Payer Name:  {{ payer_fullname}}<br>										
-										Amount: N{{amount}}<br>
-										Phone: {{ payer_phone}}<br>
-										Status: {{ status}}<br>
-										Time Left: <span class = "text-danger"> {{timeleft}} .</span>
-										Purpose: {{purpose}}
-										<div class = "form-group">
-											<form action = "/confirm-payment/{{order_id}}/{{receiving_order}}" method = "post">
-												<button class = "btn btn-primary" id = "feedenter2" type= "submit">Confirm payment</button></post>
-										</div>
-									</p>
-								</div>
-							</div>
-						</div>
-					{{/each}}
-				{{/if}}
-				{{#if receivinguser}}
-					{{#each receivinguser}}
-						<div class="row">
-							<div class="col-md-12">
-								<div class="card ">
-									<div class="card-header ">
-										<h5 class="card-title">Payment Details</h5>
-							   
-									</div>
-								<div class="card-body ">									
-									<p class = "text-danger"><b>
-										Your sponsor  will receive payment from {{payer_fullname}} before {{expire}} on your behalf
-									<br>
-									<p>
-										Payer Name:  {{ payer_fullname}}<br>										
-										Amount: N{{amount}}<br>
-										Phone: {{ payer_phone}}<br>
-										Status: {{ status}}<br>
-										Time Left: <span class = "text-danger"> {{timeleft}} .</span>
-										Purpose: {{purpose}}
-									</p>
-								</div>
-							</div>
-						</div>
-					{{/each}}
-				{{/if}}
+				
 				{{#if receivingmatrix}}
 					{{#each receivingmatrix}}
 						<div class="row">
@@ -643,14 +588,14 @@
 									</div>
 								<div class="card-body ">									
 									<p class = "text-danger"><b>
-										You will receive payment from {{payer_fullname}} before {{expire}}
+										You will receive payment from {{payer_fullname}} before <span class = "recevingmatrix"> {{expire}}</span>
 									<br>
 									<p>
 										Payer Name:  {{ payer_fullname}}<br>										
 										Amount: N{{amount}}<br>
 										Phone: {{ payer_phone}}<br>
 										Status: {{ status}}<br>
-										Time Left: <span class = "text-danger"> {{timeleft}} .</span>
+										Time Left: <span class = "text-danger" class = "receivingmatrixtime"> </span><br>
 										Purpose: {{purpose}}
 										<img src = "{{pop}}" width = "100" height = "150" class = "img-fluid">
 										

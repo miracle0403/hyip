@@ -26,17 +26,40 @@
                 Your referral link is <a id = "reflink" href ="/register/ref={{#if admin}}{{admin.username}}{{else}}{{bio.username}}{{/if}}"> ezwift.online/register/ref={{#if admin}}{{admin.username}}{{else}}{{bio.username}}{{/if}}</a>
                 </p>
                 <h5 class = "text-center">MY FEEDER LEG</h5>
-                {{#if leg}}
-                	Left Leg: {{leg.a}}<br>
-                	Center Leg: {{leg.b}}<br>
-                	Right Leg: {{leg.c}}
+                {{#if ftree}}
+				<div class = "row">
+				 <div class = "col-md-8 container">
+                	<div class = "row">
+					 <div class = "col">
+					 {{ftree.a}}
+					</div>
+					<div class = "col">
+					 {{ftree.b}}
+					</div>
+					</div>
+					<div class = "row">
+					 <div class = "col">
+					 {{ftree.aa}}
+					</div> 
+					<div class = "col">
+					 {{ftree.ab}}
+					</div>
+					<div class = "col">
+					 {{ftree.ba}}
+					</div>
+					<div class = "col">
+					 {{ftree.ba}}
+					</div>
+					</div>
+					</div>
+					</div>
                 {{/if}}
                 
                 <h5 class = "text-center">MY REFFERRAL LIST </h5>
                 <div class = "row">
                 {{#if referrals}}
                 {{#each referrals}}
-                <p class = "col-md-3"> <b>{{full_name}}</b>
+                <p class = "col-md-4"> <b>{{full_name}}</b>
                 <br>
                 Phone: {{phone}}<br>
                 Email: {{email}}<br>
