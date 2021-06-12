@@ -1,0 +1,94 @@
+{{> spageh}}
+{{> spagenav}}
+
+
+ <div class="content">
+        <div class="row">
+          <div class="col-md-12">
+            <div class="card">
+              <div class="card-header">
+			   <h1 class="title text-center">MY TRANSACTIONS</h1>
+                
+			  </div>
+              <div class="card-body">
+			 
+               <div >
+                  <table class="table">
+                    <thead class=" text-primary">
+                      <th>
+                        PAYER FULL NAME
+                      </th>
+                      <th>
+                        PAYER USERNAME
+                      </th>
+                      <th>
+                        PAYER PHONE
+                      </th>
+					  <th>
+                        RECEIVER FULL NAME
+                      </th>
+                      <th>
+                        RECEIVER USERNAME
+                      </th>
+                      <th>
+                        RECEIVER PHONE
+                      </th>
+					  <th>
+                       AMOUNT
+                      </th>
+                      <th>
+                        STATUS
+                      </th>
+					  <th>
+                        ORDER ID
+                      </th>
+                      
+                    </thead>
+                    <tbody>
+					{{#if transactions}}
+					{{#each transactions}}
+                      <tr>
+                        <td>
+                          {{payer_fullname}}
+                        </td>
+                        <td>
+                          {{payer_username}}
+                        </td>
+                        <td>
+                          {{payer_phone}}
+                        </td>
+						<td>
+                          {{receiver_fullname}}
+                        </td>
+						<td>
+                          {{receiver_username}}
+                        </td>
+						<td>
+                          {{receiver_phone}}
+                        </td>
+						<td>
+                          {{amount}}
+                        </td>
+						<td>
+                          {{status}}
+                        </td>
+						<td>
+                          {{order_id}}
+                        </td>
+                       
+                      </tr>
+					  {{/each}}
+					  {{/if}}
+					  </tbody>
+					 </table>
+					</div>
+					
+					
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+{{>spagef}}

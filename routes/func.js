@@ -20,7 +20,7 @@ var preset = function(){
 setInterval(preset, 60000);
 
 exports.feedtimer = function(){
-	db.query( 'SELECT * FROM transactions WHERE status = ? and purpose = ? or purpose = ?', ['pending', 'feeder_matrix', 'feeder_bonus'], function ( err, results, fields ){
+	db.query( 'SELECT * FROM transactions WHERE status = ? and purpose = ? and amount = ?', ['pending', 'feeder_matrix', 10000], function ( err, results, fields ){
 		if (err) throw err;
 		var trans = results;
 		var now = new Date()
@@ -28,8 +28,27 @@ exports.feedtimer = function(){
 			var cd = results[i].expire;
 			var receiver = trans[i];
 			if(now >= cd){
-				db.query('CALL leafdel(?,?,?,?)', [receiver.user, receiver.payer_username, receiver.order_id, receiver.receiving_order], function(err, results, fields){
+				db.query('CALL leafdel(?)', [receiver.order_id], function(err, results, fields){
 					if (err) throw err;
+				});
+			}
+		}
+	});
+}
+
+exports.feedtimer2 = function(){
+	db.query( 'SELECT * FROM transactions WHERE status = ? and purpose = ? and amount = ?', ['pending', 'feeder_matrix', 15000], function ( err, results, fields ){
+		if (err) throw err;
+		var trans = results;
+		for(var i = 0; i < trans.length; i++){
+			var cd = results[i].expire;
+			var receiver = trans[i];
+			if(now >= cd){
+				db.query('UPDATE feeder_tree SET level_two = ?, order2 = ? WHERE order_id = ?', ['No', null, receiver.order_id], function(err, results, fields){
+					if (err) throw err;
+					db.query('UPDATE transactions SET status = ? WHERE order_id = ?', ['Not Paid', receiver.order_id], function(err, results, fields){
+						if (err) throw err;
+					});
 				});
 			}
 		}
@@ -38,7 +57,7 @@ exports.feedtimer = function(){
 
 
 exports.actimer = function(){
-	db.query( 'SELECT * FROM transactions WHERE status = ?', ['pending'], function ( err, results, fields ){
+	db.query( 'SELECT * FROM transactions WHERE status = ? and purpose = ?', ['pending', 'activation'], function ( err, results, fields ){
 		if (err) throw err;
 		
 		var trans = results;
@@ -55,9 +74,7 @@ exports.actimer = function(){
 			if(now >= cd){
  				db.query('UPDATE transactions SET status = ? WHERE expire = ?', ['Not Paid', cd], function(err, results, fields){
  					if (err) throw err;
- 					db.query('UPDATE activation SET alloted = alloted + 1 WHERE username = ?', [receiver], function(err, results, fields){
- 						if (err) throw err;
- 					});
+ 					
  				});
  			}
 		}

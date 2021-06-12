@@ -167,7 +167,7 @@ router.get('/forgotpassword/ref=', function(req, res, next) {
 	res.redirect('/forgotpassword');
 });
 
-router.post('/forgotpassword/:pin/:email', function(req, res, next) {
+router.get('/forgotpassword/:pin/:email', function(req, res, next) {
 	var pin = req.params.pin;
 	var email = req.params.email;
 	db.query( 'SELECT * FROM passwordreset WHERE email = ? and link = ?', [email, pin], function ( err, results, fields ){
@@ -377,6 +377,40 @@ router.get('/iPaid/:order_id/', ensureLoggedIn('/login'), function(req, res, nex
 	});
 });
 
+//transactions
+router.get('/transactions', ensureLoggedIn('/login'), function(req, res, next) {
+	var currentUser = req.session.passport.user.user_id;
+	db.query('SELECT * FROM user WHERE user_id = ? ', [currentUser], function(err, results, fields){
+		if (err) throw err;
+		var users = results[0];
+		if(users.user_type === 'Administrator'){
+			var admin = users;
+			db.query('SELECT * FROM transactions WHERE receiver_username = ? OR payer_username = ? ORDER BY status', [admin.username, admin.username], function(err, results, fields){
+				if (err) throw err;
+				var transactions = results;
+				res.render('transactions',{
+					title: 'EZWIFT',
+					mess: 'MY TRANSACTIONS',
+					admin: admin,
+					transactions: transactions
+				});
+			});
+		}else{
+			var bio = users;
+			db.query('SELECT * FROM transactions WHERE receiver_username = ? OR payer_username = ? ORDER BY status', [bio.username, bio.username], function(err, results, fields){
+				if (err) throw err;
+				var transactions = results;
+				res.render('transactions',{
+					title: 'EZWIFT',
+					mess: 'MY TRANSACTIONS',
+					bio: bio,
+					transactions: transactions
+				});
+			});
+		}
+	});
+});	
+
 
 //referrals
 router.get('/referrals', ensureLoggedIn('/login'), function(req, res, next) {
@@ -444,6 +478,7 @@ router.get('/referrals', ensureLoggedIn('/login'), function(req, res, next) {
 
 //get dashboard
 router.get('/dashboard', ensureLoggedIn('/login'), function(req, res, next) {
+	func.feedtimer(); func.feedtimer2()
 	var currentUser = req.session.passport.user.user_id;
 	db.query( 'SELECT * FROM user WHERE user_id = ?', [currentUser], function ( err, results, fields ){
 		if( err ) throw err;
@@ -2175,13 +2210,85 @@ router.post('/confirm-payment/:order_id/:receive', authentificationMiddleware()
 	});
 });
 
+//post password reset
+router.post('/forgotpassword/:pin', [	 check('pin', 'Code must be 7 characters').isLength(7)], function(req, res, next){
+	var email = req.body.email;
+	var pin = req.params.pin;
+	console.log(req.body)
+	var errors = validationResult(req).errors;
+	if (errors.length > 0){
+		res.render('forgotpassword', {mess: 'Password Reset Failed', errors: errors, email: email, str: pin});
+	}else{
+		db.query('SELECT email, link FROM passwordreset WHERE email = ? and link = ?', [email, pin], function(err, results, fields){
+			if (err) throw err;
+			console.log(results);
+			if(results.length === 0){
+				var error = 'Code is invalid';
+				res.render('forgotpassword', {
+					mess: 'Forgot Password?',
+					title: 'EZWIFT',
+					email: email,
+					str: pin,
+					error: error
+				});
+			}else{
+				res.render('forgotpassword', {
+					mess: 'Forgot Password?',
+					title: 'EZWIFT',
+					email: email,
+					changepass: 'fd'
+				});
+			}
+		});
+	}
+});
+
+
+router.post('/changepass/:email', [	 check('password', 'Password must be between 7 to 25 characters').isLength(7, 25)], function(req, res, next){
+	var email = req.params.email;
+	var pass1 = req.body.password;
+	var pass2 = req.body.cpass;
+	
+	var errors = validationResult(req).errors;
+	if (errors.length > 0){
+		res.render('forgotpassword', {mess: 'Password Reset Failed', errors: errors, email: email, changepass: 'c', pass1: pass1, pass2: pass2});
+	}else{
+		if(pass1 !== pass2){
+			var error = 'Password must match';
+			res.render('forgotpassword', {
+				mess: 'Password Reset Failed', 
+				error: error, 
+				email: email, 
+				changepass: 'c', 
+				pass1: pass1, 
+				pass2: pass2
+			})
+		}else{
+			bcrypt.hash(pass1, saltRounds,  function(err, hash){
+				db.query('UPDATE user SET password = ? WHERE email = ?', [hash, email], function(err, results, fields){
+					if (err) throw err;
+					var success = 'Password changed successfully! please login';
+					res.render('forgotpassword', {
+						mess: 'Password Reset Failed', 
+						success: success,
+						email: email, 
+						changepass: 'c', 
+						pass1: pass1, 
+						pass2: pass2
+					})
+				});
+			});
+		}
+	}
+});
+
 
 //post password reset
 router.post('/forgotpassword',[	 check('email', 'Email must be between 7 to 50 characters').isLength(7, 50).isEmail()], function(req, res, next){
 	var email = req.body.email
 	var errors = validationResult(req).errors;
 	if (errors.length > 0){
-		res.render('passwordreset', {mess: 'Password Reset Failed', errors: errors, email: email});
+		res.render('forgotpassword', {mess: 'Password Reset Failed', errors: errors, email: email});
 	}else{
 		db.query('SELECT email FROM user WHERE email = ?', [email], function(err, results, fields){
 			if (err) throw err;

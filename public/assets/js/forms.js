@@ -55,9 +55,9 @@ var a = setInterval(function(){
 
 	
 	var b = setInterval(function(){
-		var expire2 = document.getElementsByClassName('recevingmatrix');
+		var expire2 = document.getElementsById('recevingmatrix');
 		for(var i = 0; i < expire2.length; i++){
-			var countDown= new Date(expire2[i].innerHTML).getTime(  );
+			var countDown= new Date(expire2.innerHTML).getTime(  );
 			console.log(countDown)
 			var now = new Date().getTime(  );
 			var distance = countDown - now;
@@ -69,13 +69,13 @@ var a = setInterval(function(){
 		//	var status = 'ACTIVE'
 			
 			//show them in the demo
-							document.getElementByClassName("receivingmatrixtime")[i].innerHTML = " " + days + "d " + hours + "h "
+							document.getElementById("receivingmatrixtime").innerHTML = " " + days + "d " + hours + "h "
 	  + minutes + "m " + seconds + "s ";
 			//document.getElementById("registerbutton").style.display= "none";
 			
 			if (distance  < 0) {
 	    		clearInterval(x);
-				document.getElementByClassName('receivingmatrixtime')[i].innerHTML = "EXPIRED";
+				document.getElementById('receivingmatrixtime').innerHTML = "EXPIRED";
 				//document.getElementById("registerbutton").style.display= "block";
 	    		
 	  		}
