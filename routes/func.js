@@ -1,7 +1,7 @@
 var db = require('../db.js');
 
 var preset = function(){
-	db.query( 'SELECT * FROM passwordReset', function ( err, results, fields ){
+	db.query( 'SELECT * FROM passwordreset', function ( err, results, fields ){
 		if (err) throw err;
 		if (results.length > 0){
 			var details = results;
