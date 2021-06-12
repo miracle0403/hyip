@@ -7,7 +7,7 @@ var preset = function(){
 			var details = results;
 			var now = new Date();
 			for(var i = 0; i < details.length; i++){
-				if(details[i] <= now){
+				if(details[i].expire <= now){
 					db.query('DELETE from passwordReset where link = ?', [details[i].link],function ( err, results, fields ){
 						if (err) throw err;
 					});

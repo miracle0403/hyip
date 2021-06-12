@@ -55,7 +55,7 @@ exports.fillup = function(username, receiver, order, matid){
 										if( err ) throw err;
 									});
 								}else if (red.b === receiver.username){
-									db.query('UPDATE ftree SET ab = ? WHERE orderid = ?', [username, reorder], function ( err, results, fields ){
+									db.query('UPDATE ftree SET ba = ? WHERE orderid = ?', [username, reorder], function ( err, results, fields ){
 										if( err ) throw err;
 									});
 								}
@@ -74,7 +74,7 @@ exports.fillup = function(username, receiver, order, matid){
 								if( err ) throw err;
 								var red = results[0];
 								if (red.a === receiver.username){
-									db.query('UPDATE ftree SET ba = ? WHERE orderid = ?', [username, reorder], function ( err, results, fields ){
+									db.query('UPDATE ftree SET ab = ? WHERE orderid = ?', [username, reorder], function ( err, results, fields ){
 										if( err ) throw err;
 									});
 								}else if (red.b === receiver.username){

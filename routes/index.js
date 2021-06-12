@@ -8,7 +8,8 @@ var passport = require('passport');
 var securePin = require('secure-pin');
 var charSet = new securePin.CharSet();
 charSet.addLowerCaseAlpha().addUpperCaseAlpha().addNumeric().randomize();
-
+var mailer = require('nodemailer');
+var mail = require('../nodemailer/password.js');
 
 var path = require ('path');
 var mv = require('mv');
@@ -103,6 +104,7 @@ router.get('/forgotpassword', function(req, res, next) {
 			title: 'EZWIFT', 
 			mess: 'Forgot Password?',
 			showErrors: true,
+			ne: 'fd',
 			error: flashMessages.error
 		});
 	}else if(flashMessages.success){
@@ -110,11 +112,13 @@ router.get('/forgotpassword', function(req, res, next) {
 			title: 'EZWIFT', 
 			mess: 'Forgot Password?',
 			showSuccess: true,
+			ne: 'fd',
 			success: flashMessages.success
 		});
 	} else{
 		res.render('forgotpassword', { 
 			title: 'EZWIFT', 
+			ne: 'fd',
 			mess: 'Forgot Password?'
 		});
 	} 
@@ -133,6 +137,7 @@ router.get('/forgotpassword/ref=:username', function(req, res, next) {
 					title: 'EZWIFT', 
 					mess: 'Forgot Password?',
 					sponsor: username,
+					ne: 'fd',
 					showErrors: true,
 					error: flashMessages.error
 				});
@@ -141,12 +146,14 @@ router.get('/forgotpassword/ref=:username', function(req, res, next) {
 					title: 'EZWIFT', 
 					mess: 'Forgot Password?',
 					sponsor: username,
+					ne: 'fd',
 					showSuccess: true,
 					success: flashMessages.success
 				});
 			} else{
 				res.render('forgotpassword', { 
 					title: 'EZWIFT', 
+					ne: 'fd',
 					sponsor: username,
 					mess: 'Forgot Password?'
 				});
@@ -160,11 +167,29 @@ router.get('/forgotpassword/ref=', function(req, res, next) {
 	res.redirect('/forgotpassword');
 });
 
-router.get('/forgotpassword/:pin/:email', function(req, res, next) {
+router.post('/forgotpassword/:pin/:email', function(req, res, next) {
 	var pin = req.params.pin;
 	var email = req.params.email;
 	db.query( 'SELECT * FROM passwordreset WHERE email = ? and link = ?', [email, pin], function ( err, results, fields ){
 		if( err ) throw err;
+		if(results.length === 0){
+			var error = 'Invalid link!'
+			req.flash('error', error);
+			res.redirect('/forgotpassword')
+		}else if(results.length > 0 && results[0].status === 'Expired'){
+			var error = 'Link is expired!';
+			db.query('DELETE FROM passwordreset WHERE link = ? and email = ?', [pin, email],function ( err, results, fields ){
+				if( err ) throw err;
+				req.flash('error', error);
+				res.redirect('/forgotpassword')
+			});
+		}else if(results.length > 0 && results[0].status === 'Active'){
+			res.render('forgotpassword',{
+				title: 'EZWIFT',
+				mess: 'Forgot Password?',
+				passchange: 'CHANGE PASSWORD'
+			});
+		}
 	});
 	
 });	
@@ -372,9 +397,10 @@ router.get('/referrals', ensureLoggedIn('/login'), function(req, res, next) {
 					if (err) throw err;
 					console.log(results)
 					var count = results[0].count;
-					db.query('SELECT  * FROM ftree WHERE username = ? and (a is null OR  b is null OR aa  is null OR ab  is null OR ba  is null OR bb  is null) ', [admin.username], function(err, results, fields){
+					db.query('SELECT  * FROM ftree WHERE username = ? and matrix = ?', [admin.username, 'incomplete'], function(err, results, fields){
 						if (err) throw err;
 						var ftree = results[0];
+						console.log(ftree)
 						res.render('referrals', {
 							mess: 'MY REFERRALS', 
 							title: 'EZWIFT',
@@ -396,7 +422,7 @@ router.get('/referrals', ensureLoggedIn('/login'), function(req, res, next) {
 					if (err) throw err;
 					console.log(results)
 					var count = results[0].count;
-					db.query('SELECT  * FROM ftree WHERE username = ? and (a is null OR  b is null OR aa  is null OR ab  is null OR ba  is null OR bb  is null) ', [user.username], function(err, results, fields){
+					db.query('SELECT  * FROM ftree WHERE username = ?  and matrix = ? ', [user.username, 'incomplete'], function(err, results, fields){
 						if (err) throw err;
 						var ftree = results[0];
 						res.render('referrals', {
@@ -2033,7 +2059,7 @@ router.post('/upgradefeeder', authentificationMiddleware(), function(req, res,
 					req.flash('mergeerror', error);
 					res.redirect('/dashboard/#mergeerror');
 				}else{
-					db.query('SELECT parent.username, parent.sponsor, parent.amount, parent.order_id FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? AND parent.restricted = ? AND parent.level_two = ? AND node.totalamount < 4 ORDER BY parent.lft', [uset.username, 'No', 'Yes'], function(err, results, fields){
+					db.query('SELECT parent.username, parent.totalamount, parent.sponsor, parent.amount, parent.order_id FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? AND parent.restricted = ? AND parent.level_two = ? AND node.totalamount < 4 ORDER BY parent.lft', [uset.username, 'No', 'Yes'], function(err, results, fields){
 						if (err) throw err;
 						var receiver = results.slice(-2)[0];
 						securePin.generateString (10, charSet, function(str){
@@ -2045,6 +2071,7 @@ router.post('/upgradefeeder', authentificationMiddleware(), function(req, res,
 							var order_id = 'fel2' + str + year + month + day;
 							
 							var purpose = 'feeder_matrix';
+							console.log(receiver)
 							db.query('UPDATE feeder_tree SET order2 = ? WHERE order_id = ?', [order_id, uset.order_id], function(err, results, fields){
 								if (err) throw err;
 								db.query('CALL placefeeder1(?,?,?,?,?,?,?,?)', [users.username, purpose, users.sponsor, receiver.username, order_id, date, receiver.order_id, uset.order_id], function(err, results, fields){
@@ -2103,23 +2130,40 @@ router.post('/confirm-payment/:order_id/:receive', authentificationMiddleware()
 								db.query('SELECT * FROM ftree WHERE orderid = ?', [receive], function(err, results, fields){
 									if (err) throw err;
 									var matrixid = results;
-									genfunc.fillup(users.username, ord, order_id, matrixid)
-									db.query('CALL confirm_feeder1(?,?,?)', [trans.order_id, trans.receiver_username, trans.payer_username ], function(err, results, fields){
+									db.query('SELECT username FROM feeder_tree WHERE order_id = ?', [order_id], function(err, results, fields){
 										if (err) throw err;
-										var success = 'Payment confirmation was successful!';
-										req.flash('success', success);
-										res.redirect('/dashboard/#success');
+										var username = results[0].username;
+										genfunc.fillup(username, ord, order_id, matrixid)
+										db.query('CALL confirm_feeder1(?,?,?)', [trans.order_id, trans.receiver_username, trans.payer_username ], function(err, results, fields){
+											if (err) throw err;
+											var success = 'Payment confirmation was successful!';
+											req.flash('success', success);
+											res.redirect('/dashboard/#success');
+										});
 									});
 								});
 							}else if(trans.purpose === 'feeder_matrix' && trans.amount === 15000){
 								db.query('SELECT order_id FROM feeder_tree WHERE order2 = ?', [order_id], function(err, results, fields){
 									if (err) throw err;
+									var totalamount = ord.totalamount;
 									var ord2 = results[0].order_id;
 									db.query('CALL confirm_feeder2(?,?,?,?,?)', [trans.order_id, trans.receiver_username, trans.payer_username, trans.receving_order, ord2 ], function(err, results, fields){
 										if (err) throw err;
-										var success = 'Payment confirmation was successful!';
-										req.flash('success', success);
-										res.redirect('/dashboard/#success');
+										if(totalamount === 4){
+											console.log(totalamount, receive)
+											db.query('UPDATE ftree SET matrix = ? WHERE orderid = ?', ['completed', receive], function(err, results, fields){
+												if (err) throw err;
+												var success = 'Payment confirmation was successful! You have completed this matrix, please enter the matrix again to continue earning.';
+												req.flash('success', success);
+												res.redirect('/dashboard/#success');
+											});
+										}else{
+											
+									console.log(ord)
+											var success = 'Payment confirmation was successful!';
+											req.flash('success', success);
+											res.redirect('/dashboard/#success');
+										}										
 									});
 								});
 							}
@@ -2153,6 +2197,7 @@ router.post('/forgotpassword',[	 check('email', 'Email must be between 7 to 50 c
 					securePin.generatePin(7,  function(pin){
 						db.query('INSERT INTO passwordReset (email, expire, link) VALUES (?,?,?)', [email, date, pin], function(err, results, fields){
 							if(err) throw err;
+							mail.passReset(email, pin, date)
 							var success = 'A link has been sent to your email... Check your spam if you did not see it in your inbox.';
 							res.render('forgotpassword', {
 								mess: 'Forgot Password?',

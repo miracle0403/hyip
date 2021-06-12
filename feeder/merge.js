@@ -86,11 +86,11 @@ exports.merge1 = function (bio, req, res){
 		var month = date.getMonth() + 1;
 		var day = date.getDate() + 1;
 		var order_id = 'fe' + str + year + month + day;
-		
+		var matrixid = order_id + '/' + bio.username;
 		db.query('SELECT * FROM feeder_tree WHERE username = ? AND status = ?', [bio.username, 'confirmed'], function(err, results, fields){
 			if(err) throw err;
 			var receiver = results[0]
-			
+			console.log(results)
 			if(receiver.amount === 0 && receiver.restricted === 'No'){
 				console.log('1')
 				var purpose = 'feeder_matrix';
@@ -118,7 +118,9 @@ exports.merge1 = function (bio, req, res){
 			}else if(receiver.amount > 1 && receiver.restricted === 'No'){
 				//spillover
 				console.log('spill')
-				feederspill.feederspill(bio, req, res, order_id, date);
+				feederspill.feederspill(receiver, bio, req, res, order_id, date, matrixid);
+			}else{
+				feederspill.feederspill(receiver, bio, req, res, order_id, date, matrixid);
 			}
 			
 		});

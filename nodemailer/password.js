@@ -2,12 +2,11 @@ var mailer = require('nodemailer');
 var hbsmail = require('nodemailer-express-handlebars');
 //var fs = require('fs');
 
-exports.passReset = function (email, link, expire){
+exports.passReset = function (email, pin, expire){
 	
 	var transporter = mailer.createTransport({ 
-		host: 'gmail', 
-		port: 26, 
-		secure: false, // true for 465, false for other ports
+		service: 'gmail',
+		
 		auth: { 
 			user: 'theezwift@gmail.com', // generated ethereal 
 			pass:  '08061179366' // generated ethereal password } }); 
@@ -31,10 +30,10 @@ transporter.use('compile', hbsmail(handlebarOptions));
 
 //the message properties
 	var mailOptions = {
-  		from: '',
+  		from: 'theezwift@gmail',
   		to: email,
   		subject: 'Password Reset',
-		template: 'PassReset',
+		template: 'password',
   		context: {
   			expire: expire,
   			email: email,
