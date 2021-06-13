@@ -1596,10 +1596,10 @@ router.post('/register', [	check('username', 'Username must be between 8 to 25 n
 											db.query('SELECT username FROM user ', function(err, results, fields){
 												if (err) throw err;
 												if (results.length === 0){
-													var sponsor = 'Miracle0403';
+													var sponsor = username;
 													//register user
 													bcrypt.hash(password, saltRounds,  function(err, hash){
-														db.query('INSERT INTO user (user_id, sponsor, full_name, phone, username, email, password, user_type) VALUES (?,?,?,?,?,?,?, ?)', [ 1, sponsor,  fullname, phone, username, email, hash, 'Administrator'],  function(err, results, fields){
+														db.query('INSERT INTO user (user_id, sponsor, full_name, phone, username, email, password, user_type, activation) VALUES (?,?,?,?,?,?,?,?,?)', [ 1, sponsor,  fullname, phone, username, email, hash, 'Administrator', 'Yes'],  function(err, results, fields){
 															if (err) throw err;
 															var success = 'Registration successful! please login';
 															res.render('register', {mess: 'REGISTRATION SUCCESSFUL', success: success});
