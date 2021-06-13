@@ -17,13 +17,13 @@
               </div>
               <div class="card-body">
                 <p class = "text-big text-success">
-                	Hello {{#if admin}} {{admin.username}} {{else}} {{bio.username}}{{/if}}!
+                	Hello {{#if admin}} {{admin.username}} {{else}} {{user.username}}{{/if}}!
                 </p> 
                 <p>
                 You have {{count}} referral(s)! 
                 </p>
                 <p>
-                Your referral link is <a id = "reflink" href ="/register/ref={{#if admin}}{{admin.username}}{{else}}{{bio.username}}{{/if}}"> ezwift.online/register/ref={{#if admin}}{{admin.username}}{{else}}{{bio.username}}{{/if}}</a>
+                Your referral link is <a id = "reflink" href ="/register/ref={{#if admin}}{{admin.username}}{{else}}{{user.username}}{{/if}}"> ezwift.online/register/ref={{#if admin}}{{admin.username}}{{else}}{{bio.username}}{{/if}}</a>
                 </p>
                 <h5 class = "text-center">MY FEEDER LEG</h5>
                 {{#if ftree}}
