@@ -21,7 +21,7 @@ exports.merge = function (bio, req, res){
 				db.query('INSERT INTO feeder_tree(matrixid, username, sponsor,  lft, rgt,  order_id, status, level_two) VALUES(?, ?, ?, ?, ?, ?, ?, ?)', [matrixid, bio.username, bio.sponsor, 1, 2, order_id, 'confirmed', 'Yes'], function(err, results, fields){
 					if(err) throw err; 
 					db.query('INSERT INTO ftree (orderid, username) VALUES (?,?)', [order_id, bio.username],  function(err, results, fields){
-						if (err) throw err;
+						if(err){ console.log(err)}
 						var success = 'Matrix created!';
 						req.flash('success', success);
 						res.redirect('/dashboard')
@@ -35,9 +35,9 @@ exports.merge = function (bio, req, res){
 					if(receiver.amount === 0 && receiver.restricted === 'No' && receiver.status === 'confirmed'){
 						var purpose = 'feeder_matrix';
 						db.query('CALL leafadd(?,?,?,?,?)', [matrixid, receiver.username, order_id, bio.username, bio.sponsor], function(err, results, fields){
-							if (err) throw err;
+							if(err){ console.log(err)}
 							db.query('CALL placefeeder(?,?,?,?,?,?,?)', [bio.username, purpose, bio.sponsor, receiver.username, order_id, date, receiver.order_id], function(err, results, fields){
-								if (err) throw err;
+								if(err){ console.log(err)}
 								var success = 'You have been assigned to pay someone';
 								req.flash('success', success);
 								res.redirect('/dashboard')
@@ -46,9 +46,9 @@ exports.merge = function (bio, req, res){
 					}else if(receiver.amount === 1 && receiver.restricted === 'No' && receiver.status === 'confirmed'){
 						var purpose = 'feeder_matrix';
 						db.query('CALL leafadd(?,?,?,?,?)', [matrixid, receiver.username, order_id, bio.username, bio.sponsor], function(err, results, fields){
-							if (err) throw err;
+							if(err){ console.log(err)}
 							db.query('CALL placefeeder(?,?,?,?,?,?,?)', [bio.username, purpose, bio.sponsor, receiver.username, order_id, date, receiver.order_id], function(err, results, fields){
-								if (err) throw err;
+								if(err){ console.log(err)}
 								var success = 'You have been assigned to pay someone';
 								req.flash('success', success);
 								res.redirect('/dashboard')
@@ -62,7 +62,7 @@ exports.merge = function (bio, req, res){
 						feederspill.feederspill(receiver, bio, req, res, order_id, date, matrixid);
 					}else if(receiver.amount === 0 && receiver.restricted === 'Yes'){
 						db.query('SELECT * FROM feeder_tree ', function(err, results, fields){
-							if (err) throw err; 
+							if(err){ console.log(err)} 
 							var receiver = results[0];
 							//spillover
 							feederspill.feederspill(receiver, bio, req, res, order_id, date, matrixid);
@@ -95,9 +95,9 @@ exports.merge1 = function (bio, req, res){
 				console.log('1')
 				var purpose = 'feeder_matrix';
 				db.query('CALL leafadd(?,?,?,?,?)', [matrixid, receiver.username, order_id, bio.username, bio.sponsor], function(err, results, fields){
-					if (err) throw err;
+					if(err){ console.log(err)}
 					db.query('CALL placefeeder(?,?,?,?,?,?,?)', [bio.username, purpose, bio.sponsor, receiver.username, order_id, date, receiver.order_id], function(err, results, fields){
-						if (err) throw err;
+						if(err){ console.log(err)}
 						var success = 'You have been assigned to pay someone';
 						req.flash('success', success);
 						res.redirect('/dashboard')
@@ -107,9 +107,9 @@ exports.merge1 = function (bio, req, res){
 				console.log('2')
 				var purpose = 'feeder_matrix';
 				db.query('CALL leafadd(?,?,?,?,?)', [matrixid, receiver.username, order_id, bio.username, bio.sponsor], function(err, results, fields){
-					if (err) throw err;
+					if(err){ console.log(err)}
 					db.query('CALL placefeeder(?,?,?,?,?,?,?)', [bio.username, purpose, bio.sponsor, receiver.username, order_id, date, receiver.order_id], function(err, results, fields){
-						if (err) throw err;
+						if(err){ console.log(err)}
 						var success = 'You have been assigned to pay someone';
 						req.flash('success', success);
 						res.redirect('/dashboard')

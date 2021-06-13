@@ -23,9 +23,9 @@ exports.feederspill = function(receiver, bio, req, res, order_id, date, matid){
 					if(feeder1.length === 0 && feeder2[0].depth === feeder.depth){
 						var receiver = feeder2[0];
 						db.query('CALL leafadd(?,?,?,?,?)', [matid, receiver.username, order_id, bio.username, bio.sponsor], function(err, results, fields){
-							if (err) throw err;
+							if(err){ console.log(err)}
 							db.query('CALL placefeeder(?,?,?,?,?,?,?)', [bio.username, purpose, bio.sponsor, receiver.username, order_id, date, receiver.order_id], function(err, results, fields){
-								if (err) throw err;
+								if(err){ console.log(err)}
 								console.log('fd')
 								var success = 'You have been assigned to pay someone';
 								req.flash('success', success);
@@ -35,9 +35,9 @@ exports.feederspill = function(receiver, bio, req, res, order_id, date, matid){
 					}else if(feeder2.length === 0 && feeder1[0].depth === feeder.depth){
 						var receiver = feeder1[0];
 						db.query('CALL leafadd(?,?,?,?,?)', [matid, receiver.username, order_id, bio.username, bio.sponsor], function(err, results, fields){
-							if (err) throw err;
+							if(err){ console.log(err)}
 							db.query('CALL placefeeder(?,?,?,?,?,?,?)', [bio.username, purpose, bio.sponsor, receiver.username, order_id, date, receiver.order_id], function(err, results, fields){
-								if (err) throw err;
+								if(err){ console.log(err)}
 								console.log('fd')
 								var success = 'You have been assigned to pay someone';
 								req.flash('success', success);
@@ -47,9 +47,9 @@ exports.feederspill = function(receiver, bio, req, res, order_id, date, matid){
 					}else if(feeder2.length > 0 && feeder1[0].depth === feeder.depth){
 						var receiver = feeder1[0];
 						db.query('CALL leafadd(?,?,?,?,?)', [matid, receiver.username, order_id, bio.username, bio.sponsor], function(err, results, fields){
-							if (err) throw err;
+							if(err){ console.log(err)}
 							db.query('CALL placefeeder(?,?,?,?,?,?,?)', [bio.username, purpose, bio.sponsor, receiver.username, order_id, date, receiver.order_id], function(err, results, fields){
-								if (err) throw err;
+								if(err){ console.log(err)}
 								console.log('fd')
 								var success = 'You have been assigned to pay someone';
 								req.flash('success', success);
@@ -59,9 +59,9 @@ exports.feederspill = function(receiver, bio, req, res, order_id, date, matid){
 					}else if(feeder1.length > 0 && feeder2[0].depth === feeder.depth){
 						var receiver = feeder2[0];
 						db.query('CALL leafadd(?,?,?,?,?)', [matid, receiver.username, order_id, bio.username, bio.sponsor], function(err, results, fields){
-							if (err) throw err;
+							if(err){ console.log(err)}
 							db.query('CALL placefeeder(?,?,?,?,?,?,?)', [bio.username, purpose, bio.sponsor, receiver.username, order_id, date, receiver.order_id], function(err, results, fields){
-								if (err) throw err;
+								if(err){ console.log(err)}
 								console.log('fd')
 								var success = 'You have been assigned to pay someone';
 								req.flash('success', success);
