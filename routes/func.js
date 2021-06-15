@@ -40,14 +40,22 @@ exports.feedtimer2 = function(){
 	db.query( 'SELECT * FROM transactions WHERE status = ? and purpose = ? and amount = ?', ['pending', 'feeder_matrix', 15000], function ( err, results, fields ){
 		if(err){ console.log(err)}
 		var trans = results;
+		var now = new Date()
 		for(var i = 0; i < trans.length; i++){
 			var cd = results[i].expire;
 			var receiver = trans[i];
 			if(now >= cd){
-				db.query('UPDATE feeder_tree SET level_two = ?, order2 = ? WHERE order_id = ?', ['No', null, receiver.order_id], function(err, results, fields){
+				db.query( 'SELECT receiving_order, totalamount FROM transactions WHERE order_id = ?', [receiver.order_id], function ( err, results, fields ){
 					if(err){ console.log(err)}
-					db.query('UPDATE transactions SET status = ? WHERE order_id = ?', ['Not Paid', receiver.order_id], function(err, results, fields){
+					var rec = results[0];
+					db.query('UPDATE feeder_tree SET level_two = ?, order2 = ? WHERE order_id = ?', ['No', null, receiver.order_id], function(err, results, fields){
 						if(err){ console.log(err)}
+						db.query('UPDATE feeder_tree SET totalamount = ? WHERE order_id = ?', [rec.totalamount + 1, receiver.order_id], function(err, results, fields){
+							if(err){ console.log(err)}
+							db.query('UPDATE transactions SET status = ? WHERE order_id = ?', ['Not Paid', receiver.order_id], function(err, results, fields){
+								if(err){ console.log(err)}
+							});
+						});
 					});
 				});
 			}
