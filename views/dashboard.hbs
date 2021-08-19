@@ -576,6 +576,37 @@
 						</div>
 					{{/each}}
 				{{/if}}
+				{{#if receivingbonus}}
+					{{#each receivingbonus}}
+						<div class="row">
+							<div class="col-md-12">
+								<div class="card ">
+									<div class="card-header ">
+										<h5 class="card-title">Payment Details</h5>
+							   
+									</div>
+								<div class="card-body ">									
+									<p class = "text-danger"><b>
+										You will receive payment from {{payer_fullname}} before <span id = "receivingact">{{expire}}</span>
+									<br>
+									<p>
+										Payer Name:  {{ payer_fullname}}<br>										
+										Amount: N15,000<br>
+										Phone: {{ payer_phone}}<br>
+										Status: {{ status}}<br>
+										Purpose: {{purpose}}<br>
+										Time Left: <span class = "text-danger" id = "receivingactleft"> {{timeleft}} .</span><br>
+										Purpose: {{purpose}}
+										<div class = "form-group">
+											<form action = "/confirm-payment/{{order_id}}/{{receiving_order}}" method = "post">
+												<button class = "btn btn-primary" id = "feedenter2" type= "submit">Confirm payment</button></post>
+										</div>
+									</p>
+								</div>
+							</div>
+						</div>
+					{{/each}}
+				{{/if}}
 				
 				{{#if receivingmatrix}}
 					{{#each receivingmatrix}}

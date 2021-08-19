@@ -32,7 +32,7 @@ router.get('/', function(req, res, next) {
 	db.query( 'SELECT COUNT(username) AS noactivated  FROM user WHERE activation = ?', ['Yes'], function ( err, results, fields ){
 		if( err ) throw err;
 		var activated = results[0].noactivated;
-		db.query( 'SELECT SUM(amount) AS amount  FROM transactions',  function ( err, results, fields ){
+		db.query( 'SELECT SUM(amount) AS amount  FROM transactions WHERE status = ?',['confirmed'],  function ( err, results, fields ){
 			if( err ) throw err;
 			var amount = results[0].amount;
 			db.query( 'SELECT COUNT(username) AS nousers  FROM user', function ( err, results, fields ){
@@ -658,7 +658,7 @@ router.get('/dashboard', ensureLoggedIn('/login'), function(req, res, next) {
 								db.query( 'SELECT * FROM transactions WHERE receiver_username = ? AND (status = ? OR status = ? OR status = ?) AND purpose = ?', [user.username, 'Pending', 'UnConfirmed', 'in contest', 'activation'], function ( err, results, fields ){
 									if( err ) throw err;
 									var receivingact = results;
-									db.query( 'SELECT * FROM transactions WHERE receiver_username = ? AND (status = ? OR status = ? OR status = ?) AND purpose = ?', [user.username, 'Pending', 'UnConfirmed', 'in contest', 'feeder_matrix'], function ( err, results, fields ){
+									db.query( 'SELECT * FROM transactions WHERE receiver_username = ?  AND (status = ? OR status = ? OR status = ?) AND purpose = ?', [user.username, 'Pending', 'UnConfirmed', 'in contest', 'feeder_matrix'], function ( err, results, fields ){
 										if( err ) throw err;
 										db.query( 'SELECT sum(amount) AS count FROM transactions WHERE receiver_username = ? AND  status = ? AND purpose = ?', [user.username,  'confirmed', 'feeder_matrix'], function ( err, results, fields ){
 											if( err ) throw err;
@@ -675,69 +675,76 @@ router.get('/dashboard', ensureLoggedIn('/login'), function(req, res, next) {
 														db.query( 'SELECT * FROM transactions WHERE receiver_username = ? AND (status = ? OR status = ? OR status = ?) AND purpose = ?', [user.username, 'Pending', 'UnConfirmed', 'in contest', 'feeder_matrix'], function ( err, results, fields ){
 															if( err ) throw err;
 															var receivingmatrix = results;
-															var totalEarned = actimatrix + feedmatrix;
-															var flashMessages = res.locals.getMessages();
-															if (flashMessages.mergeerror){
-																res.render( 'dashboard', {
-																	mess: 'USER DASHBOARD',
-																	chat: chat,
-																	pop: pop,
-																	user: user,
-																	nopop: nopop,
-																	totalPaid: totalPaid,
-																	expectedEarn: expectedEarn,
-																	admin: user,
-																	showErrors: true,
-																	mergeerror: flashMessages.mergeerror,
-																	activate: 'You are activated',
-																	actimatrix: actimatrix,
-																	feedmatrix: feedmatrix,
-																	totalEarned: totalEarned,
-																	receivingact: receivingact,
-																	receivingmatrix: receivingmatrix
-																	
-																});
-															}else if (flashMessages.success){
-																res.render( 'dashboard', {
-																	mess: 'USER DASHBOARD',
-																	totalPaid: totalPaid,
-																	admin: user,
-																	expectedEarn: expectedEarn,
-																	showSuccess: true,
-																	success: flashMessages.success,
-																	chat: chat,
-																	user: user,
-																	pop: pop,
-																	nopop: nopop,
-																	activate: 'You are activated',
-																	actimatrix: actimatrix,
-																	feedmatrix: feedmatrix,
-																	totalEarned: totalEarned,
-																	receivingact: receivingact,
-																	receivingmatrix: receivingmatrix
-																});
-															}else{
-																res.render( 'dashboard', {
-																	mess: 'USER DASHBOARD',
-																	expectedEarn: expectedEarn,
-																	chat: chat,
-																	pop: pop,
-																	nopop: nopop,
-																	admin: user,
-																	user: user,
-																	totalPaid: totalPaid,
-																	activate: 'You are activated',
-																	actimatrix: actimatrix,
-																	feedmatrix: feedmatrix,
-																	totalEarned: totalEarned,
-																	receivingact: receivingact,
-																	receivingmatrix: receivingmatrix
-																});
-															}
+															db.query( 'SELECT * FROM transactions WHERE receiver_username = ? AND (status = ? OR status = ? OR status = ?) AND purpose = ?', [user.username, 'Pending', 'UnConfirmed', 'in contest', 'feeder_bonus'], function ( err, results, fields ){
+																if( err ) throw err;
+																var receivingbonus = results;
+																var totalEarned = actimatrix + feedmatrix;
+																var flashMessages = res.locals.getMessages();
+																if (flashMessages.mergeerror){
+																	res.render( 'dashboard', {
+																		mess: 'USER DASHBOARD',
+																		chat: chat,
+																		receivingbonus: receivingbonus,
+																		pop: pop,
+																		user: user,
+																		nopop: nopop,
+																		totalPaid: totalPaid,
+																		expectedEarn: expectedEarn,
+																		admin: user,
+																		showErrors: true,
+																		mergeerror: flashMessages.mergeerror,
+																		activate: 'You are activated',
+																		actimatrix: actimatrix,
+																		feedmatrix: feedmatrix,
+																		totalEarned: totalEarned,
+																		receivingact: receivingact,
+																		receivingmatrix: receivingmatrix
+																		
+																	});
+																}else if (flashMessages.success){
+																	res.render( 'dashboard', {
+																		mess: 'USER DASHBOARD',
+																		totalPaid: totalPaid,
+																		admin: user,
+																		expectedEarn: expectedEarn,
+																		showSuccess: true,
+																		success: flashMessages.success,
+																		receivingbonus: receivingbonus,
+																		chat: chat,
+																		user: user,
+																		pop: pop,
+																		nopop: nopop,
+																		activate: 'You are activated',
+																		actimatrix: actimatrix,
+																		feedmatrix: feedmatrix,
+																		totalEarned: totalEarned,
+																		receivingact: receivingact,
+																		receivingmatrix: receivingmatrix
+																	});
+																}else{
+																	res.render( 'dashboard', {
+																		mess: 'USER DASHBOARD',
+																		expectedEarn: expectedEarn,
+																		chat: chat,
+																		pop: pop,
+																		nopop: nopop,
+																		admin: user,
+																		receivingbonus: receivingbonus,
+																		user: user,
+																		totalPaid: totalPaid,
+																		activate: 'You are activated',
+																		actimatrix: actimatrix,
+																		feedmatrix: feedmatrix,
+																		totalEarned: totalEarned,
+																		receivingact: receivingact,
+																		receivingmatrix: receivingmatrix
+																	});
+																}
+															});
 														});
 													});
 												});
-											});
+											});	
 										});
 									});
 								});
@@ -2089,14 +2096,17 @@ router.post('/upgradefeeder', authentificationMiddleware(), function(req, res,
 				res.redirect('/dashboard/#mergeerror');
 			}else{
 				var uset = results[0];
+				//if user has a pending request
 				if(uset.level_two === 'pending'){
 					var error = 'You have a pending payment';
 					req.flash('mergeerror', error);
 					res.redirect('/dashboard/#mergeerror');
 				}else{
-					db.query('SELECT parent.username, parent.totalamount, parent.sponsor, parent.amount, parent.order_id FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? AND parent.restricted = ? AND parent.level_two = ? AND node.totalamount < 4 ORDER BY parent.lft', [uset.username, 'No', 'Yes'], function(err, results, fields){
+					//get the person to upgrade to
+					db.query('SELECT parent.username, parent.totalamount, parent.sponpd, parent.sponsor, parent.amount, parent.order_id FROM feeder_tree AS node, feeder_tree AS parent WHERE node.lft BETWEEN parent.lft AND parent.rgt AND node.username = ? AND parent.restricted = ? AND parent.level_two = ? AND node.totalamount < 4 ORDER BY parent.lft', [uset.username, 'No', 'Yes'], function(err, results, fields){
 						if (err) throw err;
 						var receiver = results.slice(-2)[0];
+						//configure order id of the order
 						securePin.generateString (10, charSet, function(str){
 							var date = new Date();
 							date.setHours(date.getHours() + 3);
@@ -2105,23 +2115,68 @@ router.post('/upgradefeeder', authentificationMiddleware(), function(req, res,
 							var day = date.getDate() + 1;
 							var order_id = 'fel2' + str + year + month + day;
 							
-							var purpose = 'feeder_matrix';
-							console.log(receiver)
-							db.query('UPDATE feeder_tree SET order2 = ? WHERE order_id = ?', [order_id, uset.order_id], function(err, results, fields){
-								if (err) throw err;
-								db.query('CALL placefeeder1(?,?,?,?,?,?,?,?)', [users.username, purpose, users.sponsor, receiver.username, order_id, date, receiver.order_id, uset.order_id], function(err, results, fields){
+							if(receiver.totalamount  > 0  && receiver.sponpd === 'No'){
+								console.log('start', receiver, uset)
+								var purpose = 'feeder_bonus';
+								//go to the sponsor								
+								db.query('SELECT * FROM feeder_tree WHERE username = ? AND  total_l2 < 4 ', [receiver.sponsor], function(err, results, fields){
 									if (err) throw err;
-									var success = 'You have been assigned to pay someone';
-									req.flash('success', success);
-									res.redirect('/dashboard')
+									if(results.length === 0){
+										// if the sponsor does not have an active leg, go to the first user in the user table
+										//uset.order id is the order id of the user in the level one
+										//receiver.order id is the order id of the receiver in level one
+										//rec is the first user.
+										
+										db.query('SELECT * FROM user',  function(err, results, fields){
+											if (err) throw err;
+											var rec = results[0];
+											console.log('3')
+											db.query('UPDATE feeder_tree SET order2 = ? WHERE order_id = ? ', [order_id, uset.order_id], function(err, results, fields){
+												if (err) throw err;
+												db.query('CALL placefeeder2(?,?,?,?,?,?,?,?)', [users.username, purpose, rec.username, receiver.username, order_id, date, receiver.order_id, uset.order_id], function(err, results, fields){
+													if (err) throw err;
+													var success = 'You have been assigned to pay someone';
+													req.flash('success', success);
+													res.redirect('/dashboard')
+												});
+											});
+										});
+									}else{
+										//go to the sponsor
+										var rec = results[0];
+										console.log('go to admin')
+										//get the account details.
+										db.query('UPDATE feeder_tree SET order2 = ? WHERE order_id = ? ', [order_id, uset.order_id], function(err, results, fields){
+											if (err) throw err;
+											db.query('CALL placefeeder2(?,?,?,?,?,?,?,?)', [users.username, purpose, rec.username, receiver.username, order_id, date, receiver.order_id, uset.order_id], function(err, results, fields){
+												if (err) throw err;
+												var success = 'You have been assigned to pay someone';
+												req.flash('success', success);
+												res.redirect('/dashboard')
+											});
+										});
+									}
+								});	
+							}else{
+								// take to the normal ugrage party
+								console.log('normal matrix', receiver, uset)
+								var purpose = 'feeder_matrix';
+								db.query('UPDATE feeder_tree SET order2 = ? WHERE order_id = ?', [order_id, uset.order_id], function(err, results, fields){
+									if (err) throw err;
+									db.query('CALL placefeeder1(?,?,?,?,?,?,?,?)', [users.username, purpose, users.sponsor, receiver.username, order_id, date, receiver.order_id, uset.order_id], function(err, results, fields){
+										if (err) throw err;
+										var success = 'You have been assigned to pay someone';
+										req.flash('success', success);
+										res.redirect('/dashboard')
+									});
 								});
-							});
-						});
-					});
+							}	
+						});	
+					});	
 				}
 			}
-		});
-	});
+		});	
+	});	
 });
 
 
@@ -2131,6 +2186,7 @@ router.post('/confirm-payment/:order_id/:receive', authentificationMiddleware()
 	var order_id = req.params.order_id;
 	var receive = req.params.receive;
 	var currentUser = req.session.passport.user.user_id;
+	
 	//get the username
 	db.query('SELECT * FROM user WHERE user_id = ?', [currentUser], function(err, results, fields){
 		if (err) throw err;
@@ -2155,34 +2211,66 @@ router.post('/confirm-payment/:order_id/:receive', authentificationMiddleware()
 						res.redirect('/dashboard/#mergeerror');
 					}else{
 						var ord = results[0];
-						if(trans.user !== users.username && trans.receiver_username !== users.username){
-							var error = 'Something went wrong';
-							req.flash('mergeerror', error);
-							console.log(username, trans.receiver_username);
-							res.redirect('/dashboard/#mergeerror');
-						}else{
-							if(trans.purpose === 'feeder_matrix' && trans.amount === 10000){
-								db.query('SELECT * FROM ftree WHERE orderid = ?', [receive], function(err, results, fields){
+						//if it is feeder matrix
+						if(trans.purpose === 'feeder_matrix' && trans.amount === 10000){
+							db.query('SELECT * FROM ftree WHERE orderid = ?', [receive], function(err, results, fields){
+								if (err) throw err;
+								var matrixid = results;
+								console.log('feeder')
+								db.query('SELECT username FROM feeder_tree WHERE order_id = ?', [order_id], function(err, results, fields){
 									if (err) throw err;
-									var matrixid = results;
-									db.query('SELECT username FROM feeder_tree WHERE order_id = ?', [order_id], function(err, results, fields){
+									var username = results[0].username;
+									genfunc.fillup(username, ord, order_id, matrixid)
+									db.query('CALL confirm_feeder1(?,?,?)', [trans.order_id, trans.receiver_username, trans.payer_username ], function(err, results, fields){
 										if (err) throw err;
-										var username = results[0].username;
-										genfunc.fillup(username, ord, order_id, matrixid)
-										db.query('CALL confirm_feeder1(?,?,?)', [trans.order_id, trans.receiver_username, trans.payer_username ], function(err, results, fields){
-											if (err) throw err;
+										var success = 'Payment confirmation was successful!';
+										req.flash('success', success);
+										res.redirect('/dashboard/#success');
+									});
+								});
+							});
+						}else if(trans.purpose === 'feeder_matrix' && trans.amount === 15000){
+							console.log('level_two matrix')
+							//this query will get the level one order id from the database
+							db.query('SELECT order_id FROM feeder_tree WHERE order2 = ?', [order_id], function(err, results, fields){
+								if (err) throw err;
+								var totalamount = ord.total_l2;
+								var ord2 = results[0].order_id;
+								
+								db.query('UPDATE feeder_tree SET total_l2 = ? WHERE order_id = ?', [totalamount + 1, ord.order_id], function(err, results, fields){
+									if (err) throw err;
+									db.query('CALL confirm_feeder2(?,?,?,?,?)', [trans.order_id, trans.receiver_username, trans.payer_username, trans.receving_order, ord2 ], function(err, results, fields){
+										if (err) throw err;
+										if(totalamount === 3){
+											console.log(totalamount, receive)
+											db.query('UPDATE ftree SET matrix = ? WHERE orderid = ?', ['completed', receive], function(err, results, fields){
+												if (err) throw err;
+												var success = 'Payment confirmation was successful! You have completed this matrix, please enter the matrix again to continue earning.';
+												req.flash('success', success);
+												res.redirect('/dashboard/#success');
+											});
+										}else{
+											
+											console.log(ord)
 											var success = 'Payment confirmation was successful!';
 											req.flash('success', success);
 											res.redirect('/dashboard/#success');
-										});
+										}										
 									});
-								});
-							}else if(trans.purpose === 'feeder_matrix' && trans.amount === 15000){
-								db.query('SELECT order_id FROM feeder_tree WHERE order2 = ?', [order_id], function(err, results, fields){
+								});								
+							});	
+						}else if(trans.purpose === 'feeder_bonus' && trans.amount === 15000){
+							console.log('level_twobonus')
+							
+							//this query will get the level one order id from the database
+							db.query('SELECT order_id FROM feeder_tree WHERE order2 = ?', [order_id], function(err, results, fields){
+								if (err) throw err;
+								var totalamount = ord.total_l2;
+								//order id of level one.
+								var ord2 = results[0].order_id;
+								db.query('UPDATE feeder_tree SET total_l2 = ? WHERE order_id = ?', [totalamount + 1, ord.order_id], function(err, results, fields){
 									if (err) throw err;
-									var totalamount = ord.totalamount;
-									var ord2 = results[0].order_id;
-									db.query('CALL confirm_feeder2(?,?,?,?,?)', [trans.order_id, trans.receiver_username, trans.payer_username, trans.receving_order, ord2 ], function(err, results, fields){
+									db.query('CALL confirm_feeder3(?,?,?,?,?)', [trans.order_id, trans.receiver_username, trans.payer_username, trans.receving_order, ord2 ], function(err, results, fields){
 										if (err) throw err;
 										if(totalamount === 4){
 											console.log(totalamount, receive)
@@ -2193,21 +2281,25 @@ router.post('/confirm-payment/:order_id/:receive', authentificationMiddleware()
 												res.redirect('/dashboard/#success');
 											});
 										}else{
-											
-									console.log(ord)
+											console.log(ord)
 											var success = 'Payment confirmation was successful!';
 											req.flash('success', success);
 											res.redirect('/dashboard/#success');
-										}										
-									});
-								});
-							}
+										}
+									});	
+								});	
+							});	
+						}else{
+							var error = 'Something went wrong';
+							console.log('wrong orderid')
+							req.flash('mergeerror', error);
+							res.redirect('/dashboard/#mergeerror');
 						}
 					}
-				});
+				});	
 			}
-		});
-	});
+		});	
+	});	
 });
 
 //post password reset

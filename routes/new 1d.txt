@@ -1,0 +1,49 @@
+console.log('y')
+								var purpose = 'feeder_bonus';
+								db.query('SELECT total_l2 FROM feeder_tree WHERE total_l2 < ? and username = ?', [4, receiver.sponsor], function(err, results, fields){
+									if (err) throw err;
+									if(results.length === 0){
+										db.query('SELECT * FROM user',  function(err, results, fields){
+											if (err) throw err;
+											var rec = results[0];
+											db.query('UPDATE feeder_tree SET order2 = ? WHERE order_id = ? ', [order_id, uset.order_id], function(err, results, fields){
+												if (err) throw err;
+												db.query('CALL placefeeder2(?,?,?,?,?,?,?,?)', [users.username, purpose, rec.username, receiver.username, order_id, date, receiver.order_id, uset.order_id], function(err, results, fields){
+													if (err) throw err;
+													var success = 'You have been assigned to pay someone';
+													req.flash('success', success);
+													res.redirect('/dashboard')
+												});
+											});
+										});
+									}else{
+										var rec = results[0];
+										db.query('UPDATE feeder_tree SET order2 = ? WHERE order_id = ? ', [order_id, uset.order_id], function(err, results, fields){
+											if (err) throw err;
+											db.query('CALL placefeeder2(?,?,?,?,?,?,?,?)', [users.username, purpose, rec.username, receiver.username, order_id, date, receiver.order_id, uset.order_id], function(err, results, fields){
+												if (err) throw err;
+												var success = 'You have been assigned to pay someone';
+												req.flash('success', success);
+												res.redirect('/dashboard')
+											});
+										});
+									}
+								});
+								
+								
+								delete from feeder_tree; delete from ftree; delete from transactions;
+								
+								
+								
+								console.log('h')
+								var purpose = 'feeder_matrix';
+								console.log(receiver)
+								db.query('UPDATE feeder_tree SET order2 = ? WHERE order_id = ?', [order_id, uset.order_id], function(err, results, fields){
+									if (err) throw err;
+									db.query('CALL placefeeder1(?,?,?,?,?,?,?,?)', [users.username, purpose, users.sponsor, receiver.username, order_id, date, receiver.order_id, uset.order_id], function(err, results, fields){
+										if (err) throw err;
+										var success = 'You have been assigned to pay someone';
+										req.flash('success', success);
+										res.redirect('/dashboard')
+									});
+								});
