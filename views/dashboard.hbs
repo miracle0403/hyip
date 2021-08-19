@@ -97,7 +97,7 @@
                 Amount: N1000<br>
                 Phone: {{pending.receiver_phone}}<br>
                 Status: {{pending.status}}<br>
-                Time Left: <span class = "text-danger"> {{timeleft}} .</span>
+                Time Left: <span class = "text-danger" id = "expirependingacttime"> {{timeleft}} .</span>
                 </p>
                
                 
@@ -149,7 +149,7 @@
               <div class="card-body ">
                 
                 <p class = "text-danger"><b>
-                You claimed to pay  {{unconfirmed.receiver_fullname}} the sum of N1000. Call your receiver to confirm your payment before {{unconfirmed.expire}}</b>
+                You claimed to pay  {{unconfirmed.receiver_fullname}} the sum of N1000. Call your receiver to confirm your payment before <span = "unconfirmedexpire">{{unconfirmed.expire}}</span></b>
                 </p>
                 <br>
                 <p>
@@ -159,7 +159,7 @@
                 Amount: N1000<br>
                 Phone: {{unconfirmed.receiver_phone}}<br>
                 Status: <span class = "text-warning"> {{unconfirmed.status}}</span><br>
-                Time Left: <span class = "text-danger"> {{timeleft}} .</span>
+                Time Left: <span class = "text-danger" id = "unconfirmedexpiretime"> {{timeleft}} .</span>
                 </p>
                 <br><img src = "{{unconfirmed.pop}}" height = " 250" width = "300" class = "img-fluid"/>
                 
@@ -556,7 +556,7 @@
 									</div>
 								<div class="card-body ">									
 									<p class = "text-danger"><b>
-										You will receive payment from {{payer_fullname}} before <span id = "receivingact">{{expire}}</span>
+										You will receive payment from {{payer_fullname}} before <span name = "receivingact">{{expire}}</span>
 									<br>
 									<p>
 										Payer Name:  {{ payer_fullname}}<br>										
@@ -564,7 +564,7 @@
 										Phone: {{ payer_phone}}<br>
 										Status: {{ status}}<br>
 										Purpose: {{purpose}}<br>
-										Time Left: <span class = "text-danger" id = "receivingactleft"> {{timeleft}} .</span><br>
+										Time Left: <span class = "text-danger" name = "receivingacttime"> {{timeleft}} .</span><br>
 										Purpose: {{purpose}}
 										<div class = "form-group">
 											<form action = "/confirm-payment-act/{{order_id}}" method = "post">
@@ -587,7 +587,7 @@
 									</div>
 								<div class="card-body ">									
 									<p class = "text-danger"><b>
-										You will receive payment from {{payer_fullname}} before <span id = "receivingact">{{expire}}</span>
+										You will receive payment from {{payer_fullname}} before <span name = "receivingact">{{expire}}</span>
 									<br>
 									<p>
 										Payer Name:  {{ payer_fullname}}<br>										
@@ -595,7 +595,7 @@
 										Phone: {{ payer_phone}}<br>
 										Status: {{ status}}<br>
 										Purpose: {{purpose}}<br>
-										Time Left: <span class = "text-danger" id = "receivingactleft"> {{timeleft}} .</span><br>
+										Time Left: <span class = "text-danger" name = "receivingbonusleft"> {{expire}} .</span><br>
 										Purpose: {{purpose}}
 										<div class = "form-group">
 											<form action = "/confirm-payment/{{order_id}}/{{receiving_order}}" method = "post">
@@ -619,14 +619,14 @@
 									</div>
 								<div class="card-body ">									
 									<p class = "text-danger"><b>
-										You will receive payment from {{payer_fullname}} before <span id = "recevingmatrix"> {{expire}}</span>
+										You will receive payment from {{payer_fullname}} before <span name = "recevingmatrix"> {{expire}}</span>
 									<br>
 									<p>
 										Payer Name:  {{ payer_fullname}}<br>										
 										Amount: N{{amount}}<br>
 										Phone: {{ payer_phone}}<br>
 										Status: {{ status}}<br>
-										Time Left: <span class = "text-danger" id = "receivingmatrixtime"> </span><br>
+										Time Left: <span class = "text-danger" name = "receivingmatrixtime"> </span><br>
 										Purpose: {{purpose}}
 										<img src = "{{pop}}" width = "100" height = "150" class = "img-fluid">
 										

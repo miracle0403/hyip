@@ -423,50 +423,107 @@ router.get('/referrals', ensureLoggedIn('/login'), function(req, res, next) {
 		//console.log(results)
 		if(users.user_type === 'Administrator'){
 			var admin = users;
-			console.log(admin)
 			db.query('SELECT  username, phone, email, status, activation, full_name FROM user WHERE sponsor = ? ', [admin.username], function(err, results, fields){
 				if (err) throw err;
 				var referrals = results;
 				db.query('SELECT  COUNT(username) AS count FROM user WHERE sponsor = ? ', [admin.username], function(err, results, fields){
 					if (err) throw err;
-					console.log(results)
 					var count = results[0].count;
 					db.query('SELECT  * FROM ftree WHERE username = ? and matrix = ?', [admin.username, 'incomplete'], function(err, results, fields){
 						if (err) throw err;
 						var ftree = results[0];
 						console.log(ftree)
-						res.render('referrals', {
-							mess: 'MY REFERRALS', 
-							title: 'EZWIFT',
-							admin: admin,
-							count: count,
-							ftree: ftree,
-							referrals: referrals
-						});
-					});
+						db.query('SELECT level_two FROM feeder_tree WHERE username = ? and total_l2 < 4', [admin.username], function(err, results, fields){
+							if (err) throw err;
+							console.log(results)
+							if(results.length === 0){
+								res.render('referrals', {
+									mess: 'MY REFERRALS', 
+									title: 'EZWIFT',
+									admin: admin,
+									count: count,
+									ftree: ftree,
+									me: 'You are not in any matrix yet. Go to your dashboard to join the feeder matrix',									
+									referrals: referrals
+								});
+							}else{
+								var last = results.slice(-1)[0];
+								if(last.level_two === 'No'){
+									res.render('referrals', {
+										mess: 'MY REFERRALS', 
+										title: 'EZWIFT',
+										admin: admin,
+										me: 'You are in level one',
+										count: count,
+										ftree: ftree,
+										referrals: referrals
+									});
+								}else if (last.level_two === 'Yes'){
+									res.render('referrals', {
+										mess: 'MY REFERRALS', 
+										title: 'EZWIFT',
+										admin: admin,
+										me: 'You are in level two',
+										count: count,
+										ftree: ftree,
+										referrals: referrals
+									});
+								}
+							}
+							
+						});	
+					});	
 				});
 			});
 		}else{
 			var user = users;
-			console.log(user)
 			db.query('SELECT  username, phone, email, status, activation, full_name FROM user WHERE sponsor = ? ', [user.username], function(err, results, fields){
 				if (err) throw err;
 				var referrals = results;
 				db.query('SELECT  COUNT(username) AS count FROM user WHERE sponsor = ? ', [user.username], function(err, results, fields){
 					if (err) throw err;
-					console.log(results)
 					var count = results[0].count;
 					db.query('SELECT  * FROM ftree WHERE username = ?  and matrix = ? ', [user.username, 'incomplete'], function(err, results, fields){
 						if (err) throw err;
 						var ftree = results[0];
-						res.render('referrals', {
-							mess: 'MY REFERRALS', 
-							title: 'EZWIFT',
-							user: user,
-							count: count,
-							ftree: ftree,
-							referrals: referrals
-						});
+						db.query('SELECT level_two FROM feeder_tree WHERE username = ? and total_l2 < 4', [user.username], function(err, results, fields){
+							if (err) throw err;
+							console.log(results)
+							if(results.length === 0){
+								res.render('referrals', {
+									mess: 'MY REFERRALS', 
+									title: 'EZWIFT',
+									user: user,
+									me: 'You are not in any matrix yet. Go to your dashboard to join the feeder matrix',
+									count: count,
+									ftree: ftree,
+									referrals: referrals
+								});
+							}else {
+								var last = results.slice(-1)[0];
+								if(last.level_two === 'No'){
+									res.render('referrals', {
+										mess: 'MY REFERRALS', 
+										title: 'EZWIFT',
+										user: user,
+										me: 'You are in level one',
+										count: count,
+										ftree: ftree,
+										referrals: referrals
+									});
+								}else if (last.level_two === 'Yes'){
+									res.render('referrals', {
+										mess: 'MY REFERRALS', 
+										title: 'EZWIFT',
+										user: user,
+										me: 'You are in level two',
+										count: count,
+										ftree: ftree,
+										referrals: referrals
+									});
+								}
+							}
+						});	
 					});
 				});
 			});
