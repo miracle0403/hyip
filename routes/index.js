@@ -2126,7 +2126,7 @@ router.post('/upgradefeeder', authentificationMiddleware(), function(req, res,
 										//uset.order id is the order id of the user in the level one
 										//receiver.order id is the order id of the receiver in level one
 										//rec is the first user.
-										
+										console.log('go to admin')
 										db.query('SELECT * FROM user',  function(err, results, fields){
 											if (err) throw err;
 											var rec = results[0];
@@ -2144,7 +2144,7 @@ router.post('/upgradefeeder', authentificationMiddleware(), function(req, res,
 									}else{
 										//go to the sponsor
 										var rec = results[0];
-										console.log('go to admin')
+										console.log('go to sponsor')
 										//get the account details.
 										db.query('UPDATE feeder_tree SET order2 = ? WHERE order_id = ? ', [order_id, uset.order_id], function(err, results, fields){
 											if (err) throw err;
