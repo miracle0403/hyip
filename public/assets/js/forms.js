@@ -137,7 +137,8 @@ var a = setInterval(function(){
 	}, 1000);
 
 	var c = setInterval(function(){
-		var expire2 = document.getElementsByName('recevingact');
+		var expire2 = document.getElementsByName('receivingact');
+		console.log(expire2)
 		for(var i = 0; i < expire2.length; i++){
 			var countDown= new Date(expire2[i].innerHTML).getTime(  );
 			console.log(expire2[i].innerHTML)

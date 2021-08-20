@@ -1,125 +1,66 @@
-<body class="home page-template-default page page-id-4 logged-in admin-bar no-customize-support wp-embed-responsive customizer-styles-applied singular image-filters-enabled hide-homepage-title mobile-nav-side highlander-enabled highlander-light">
-
+<body class="landing-page">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg fixed-top navbar-transparent " color-on-scroll="100">
+    <div class="container">
+      <div class="navbar-translate">
+        <a class="navbar-brand" href="/" rel="tooltip"  data-placement="bottom" target="_blank">
+          <span>EZ</span>WIFT
+        </a>
+        <button class="navbar-toggler navbar-toggler" type="button" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-bar bar1"></span>
+          <span class="navbar-toggler-bar bar2"></span>
+          <span class="navbar-toggler-bar bar3"></span>
+        </button>
+      </div>
+      <div class="collapse navbar-collapse justify-content-end" id="navigation">
+        <div class="navbar-collapse-header">
+          <div class="row">
+            <div class="col-6 collapse-brand">
+              <a>
+                EZWIFT
+              </a>
+            </div>
+            <div class="col-6 collapse-close text-right">
+              <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navigation" aria-controls="navigation-index" aria-expanded="false" aria-label="Toggle navigation">
+                <i class="tim-icons icon-simple-remove"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+        <ul class="navbar-nav">
+         
+		  <li class="nav-item">
+            <a class="nav-link" href="/ref={{sponsor}}">Home</a>
+          </li>
+		  <li class="nav-item">
+            <a class="nav-link" href="/faq/ref={{sponsor}}">FAQ</a>
+          </li> 
+		  <li class="nav-item">
+            <a class="nav-link" href="/howitworks/ref={{sponsor}}">How It Works</a>
+          </li>
+		  
+		   {{#if isAuthenticated}}
+		   
+		  <li class="nav-item">
+            <a class="nav-link" href="/dashboard">Dashboard</a>
+          </li>
+		  <li class="nav-item">
+            <a class="nav-link" href="/logout">Logout</a>
+          </li>
+		  
+        {{else}}
+		<li class="nav-item">
+            <a class="nav-link" href="register/ref={{sponsor}}">Register</a>
+          </li>
+		  <li class="nav-item">
+            <a class="nav-link" href="/login/ref={{sponsor}}">Login</a>
+          </li>
 		
-
-	
-<script type="text/javascript">
-/* <![CDATA[ */
-var clickDebugLink;
-
-jQuery(document).ready( function($) {
-	var single = false, w = 1000,
-		supe = false;
-
-	$(document.body).load(function(){ $('#wpadminbar img.grav-hashed').removeClass('grav-hashed'); }); // hack to hide the gravatar hovercard
-
-	if ( single && supe )
-		w = 1385;
-	else if ( supe )
-		w = 1200;
-
-	// debug bar extra
-	clickDebugLink = function( parent_id, obj ) {
-
-		$('#'+parent_id).children('div').hide();
-
-		document.getElementById( obj.href.substr( obj.href.indexOf( '#' ) + 1 ) ).style.display = 'block';
-		$( obj.href.substr( obj.href.indexOf( '#' ) ) ).show()
-
-		$(obj).parent().addClass('current').siblings('li').removeClass('current');
-
-		return false;
-	};
-
-	$( '#wpadminbar #wp-admin-bar-shortlink' ).click( function() {
-		$( '#adminbar-shortlink-input' ).select();
-	});
-
-	// skip tap-to-hover on site switcher for mobile
-	if ( 'ontouchstart' in window ) {
-		$('#wp-admin-bar-switch-site').on( 'touchstart', function( event ) {
-			if ( $( window ).width() > 782 ) {
-				return;
-			}
-			event.stopPropagation();
-			$( event.target ).first( 'a' ).click();
-		});
-	}
-
-});
-/* ]]> */
-</script>
-	<div class="wpcom-bubble action-bubble">
-		<div class="bubble-txt"></div>
-	</div>
-	<script type="text/javascript">function hideBubble() { jQuery('body').append( jQuery( 'div.wpcom-bubble' ).removeClass( 'fadein' ) ).off( 'click.bubble touchstart.bubble' ); jQuery(document).off( 'scroll.bubble' ); };</script>
-		<script type="text/javascript">
-	jQuery( '#wp-admin-bar-jumptotop-button-menu a' ).click( function( e ) {
-		e.preventDefault();
-		jQuery( 'html, body' ).animate( { scrollTop: 0 }, 'fast' );
-	} );
-	function hideShowTbJumpToTop() {
-		var total_width = 0;
-		// Calculate total width taken by items minus our button to see if it'll
-		// overlap with other toolbar menus.
-		jQuery( '#wp-admin-bar-root-default > li' ).each( function() {
-			var self = jQuery( this );
-			if ( 'wp-admin-bar-jumptotop-button-menu' != self.attr( 'id' ) )
-				total_width += self.width();
-		});
-		if ( jQuery( '#wp-admin-bar-jumptotop-button-menu' ).position()['left'] - total_width < 10 ) {
-			jQuery( '#jumptotop' ).animate( { 'top': '-50px' }, 'fast' );
-		} else if (  jQuery( window ).scrollTop() >= 350 && parseInt( jQuery( '#jumptotop' ).css( 'top' ) ) < 0 ) {
-			if ( jQuery( '#wp-admin-bar-jumptotop-button-menu' ).position()['left'] - total_width < 10 )
-			   return;
-			jQuery( '#jumptotop' ).animate( { 'top': 0 }, 'fast' );
-		} else if (  jQuery( window ).scrollTop() < 1 && parseInt( jQuery( '#jumptotop' ).css( 'top' ) ) >= 0 ) {
-			jQuery( '#jumptotop' ).animate( { 'top': '-50px' }, 'fast' );
-		}
-	}
-	// handle on page load if auto scrolling to a position
-	hideShowTbJumpToTop();
-	// bind to scrolll event
-	var jumpToTopTimer = null;
-	jQuery( window ).scroll( function() {
-		clearTimeout( jumpToTopTimer );
-		jumpToTopTimer = setTimeout( jumpToTopRefresh, 150 );
-	} );
-	var jumpToTopRefresh = function() {
-		hideShowTbJumpToTop();
-	};
-	</script>
-	
-	<div id="page" class="site">
-	<a class="skip-link screen-reader-text" href="#content">Skip to content</a>
-
-	
-<header id="masthead" class="site-header responsive-max-width has-title-and-tagline has-menu" role="banner">
-	<div class="site-branding">
-
-								<p class="site-title"><a href="/" rel="home">{{title}}</a></p>
-			
-	</div><!-- .site-branding -->
-		<nav id="site-navigation" class="main-navigation" aria-label="Main Navigation">
-
-		<input type="checkbox" role="button" aria-haspopup="true" id="toggle" class="hide-visually">
-		<label for="toggle" id="toggle-menu" class="button">
-			Menu			<span class="dropdown-icon open">+</span>
-			<span class="dropdown-icon close">&times;</span>
-			<span class="hide-visually expanded-text">expanded</span>
-			<span class="hide-visually collapsed-text">collapsed</span>
-		</label>
-
-		<div class="main-menu-container"><ul id="menu-primary-1" class="main-menu" aria-label="submenu"><li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-4 current_page_item menu-item-10"><a href="/ref={{sponsor}}" aria-current="page">Home</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-11"><a href="/faq/ref={{sponsor}}">FAQ</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-11"><a href="/howitworks/ref={{sponsor}}">How It works</a></li>
-{{#if isAuthenticated}}
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-11"><a href="/logout">Log Out</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-11"><a href="/dashboard">Dashboard</a></li>
-{{else}}
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-11"><a href="/register/ref={{sponsor}}">Register</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-11"><a href="/login/ref={{sponsor}}">Login</a></li>
-{{/if}}
-</ul></div>	</nav><!-- #site-navigation -->
 		
-</header><!-- #masthead -->
+		
+		 {{/if}}
+        </ul>
+      </div>
+    </div>
+  </nav>
+  <!-- End Navbar -->

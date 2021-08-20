@@ -1,221 +1,99 @@
-<footer id="colophon" class="site-footer responsive-max-width">
-				<nav class="footer-navigation" aria-label="Footer Menu">
-		<div class="menu-primary-container"><ul id="menu-primary-2" class="footer-menu"><li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-home current-menu-item page_item page-item-4 current_page_item menu-item-10"><a href="/ref={{sponsor}}" aria-current="page">Home</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-11"><a href="/register/ref={{sponsor}}">Register</a></li>
-<li class="menu-item menu-item-type-post_type menu-item-object-page menu-item-11"><a href="/login/ref={{sponsor}}">Log In</a></li>
-</ul></div>	</nav><!-- .footer-navigation -->
-
-	
-		<div class="site-info">
-		<a class="site-name" href="/ref={{sponsor}}" rel="home">{{title}}</a><span class="comma">,</span>
-	</footer><!-- #colophon -->
-
-</div><!-- #page -->
-
-<!--  -->
-	<script type="text/javascript">
-	/* <![CDATA[ */
-		jQuery(document).ready( function($) {
-			function doFollowingHover() {
-				$('#wp-admin-bar-follow > a').unbind( '.unfollow' );
-
-				$('#wp-admin-bar-follow > a').bind( 'mouseover.unfollow', function() {
-
-					$(this).html( "Unfollow" ).parent( 'li' ).addClass( 'unfollow' );
-				});
-				$('#wp-admin-bar-follow > a').bind( 'mouseout.unfollow', function() {
-					$(this).html( "Following" ).parent( 'li' ).removeClass( 'unfollow' );
-				});
-			}
-							doFollowingHover();
-			
-			$('#wp-admin-bar-follow > a').click( function( e ) {
-				$('#wp-admin-bar-follow > a').unbind( '.unfollow' );
-
-				e.preventDefault();
-
-				var link = $( this ), li = $( '#wp-admin-bar-follow' ), timeout = 0;
-
-				if ( li.hasClass( 'subscribed' ) ) {
-					li.removeClass( 'subscribed' ).removeClass( 'unfollow' );
-					link.html( "Follow" );
-
-					$('body').append( $( 'div.wpcom-bubble' ).removeClass( 'fadein' ) ).off( 'click.bubble' );
-
-					var action = 'ab_unsubscribe_from_blog';
-				} else {
-					li.addClass( 'subscribed' ).removeClass( 'unfollow' );
-					link.html( "Following" );
-
-						var left = 131 - link.width();
-						li.append( $( 'div.wpcom-bubble' ).css( { left: '-' + left + 'px' } ) );
-						$( 'div.bubble-txt', 'div.wpcom-bubble' ).html( "New posts from this blog will now appear in \u003Ca target=\u0022_blank\u0022 href=\u0022http:\/\/wordpress.com\/\u0022\u003Eyour reader\u003C\/a\u003E. You can manage email alerts from your \u003Ca target=\u0022_blank\u0022 href=\u0022http:\/\/wordpress.com\/following\/edit\/\u0022\u003Esubscriptions page\u003C\/a\u003E." );
-
-						$( 'div.wpcom-bubble.action-bubble' ).addClass( 'fadein' );
-
-						setTimeout( function() {
-							$('body').on( 'click.bubble touchstart.bubble', function(e) {
-								if ( !$(e.target).hasClass('wpcom-bubble') && !$(e.target).parents( 'div.wpcom-bubble' ).length )
-									hideBubble();
-							});
-							setTimeout( hideBubble, 15000 );
-						}, 500 );
-
-					var action = 'ab_subscribe_to_blog';
-					$('#wp-admin-bar-follow > a').bind( 'mouseout.shift', function() {
-						doFollowingHover();
-						$(this).unbind( '.shift' );
-					});
-				}
-
-				var nonce = link.attr( 'href' ).split( '_wpnonce=' );
-				nonce = nonce[1];
-
-				$.post( "https:\/\/design321429498.wordpress.com\/wp-admin\/admin-ajax.php", {
-					'action': action,
-					'_wpnonce': nonce,
-					'source': 'admin_bar',
-					'blog_id': 193991874				});
-			});
-		});
-	/* ]]> */
-	</script>
-<script src='//0.gravatar.com/js/gprofiles.js?ver=202122y' id='grofiles-cards-js'></script>
-<script id='wpgroho-js-extra'>
-var WPGroHo = {"my_hash":"f13d38ae9c0729d14a523168dfacf201"};
-</script>
-<script crossorigin='anonymous' type='text/javascript' src='https://s0.wp.com/wp-content/mu-plugins/gravatar-hovercards/wpgroho.js?m=1610363240h'></script>
-
-	<script>
-		// Initialize and attach hovercards to all gravatars
-		( function() {
-			function init() {
-				if ( typeof Gravatar === 'undefined' ) {
-					return;
-				}
-
-				if ( typeof Gravatar.init !== 'function' ) {
-					return;
-				}
-
-				Gravatar.profile_cb = function ( hash, id ) {
-					WPGroHo.syncProfileData( hash, id );
-				};
-
-				Gravatar.my_hash = WPGroHo.my_hash;
-				Gravatar.init( 'body', '#wp-admin-bar-my-account' );
-			}
-
-			if ( document.readyState !== 'loading' ) {
-				init();
-			} else {
-				document.addEventListener( 'DOMContentLoaded', init );
-			}
-		} )();
-	</script>
-
-		<div style="display:none">
-	<div class="grofile-hash-map-f13d38ae9c0729d14a523168dfacf201">
-	</div>
-	</div>
-<div id="report-form-window" style="display:none;"></div>
-<script>
-window.addEventListener( "load", function( event ) {
-	var link = document.createElement( "link" );
-	link.href = "https://s0.wp.com/wp-content/mu-plugins/actionbar/actionbar.css?v=20201002";
-	link.type = "text/css";
-	link.rel = "stylesheet";
-	document.head.appendChild( link );
-
-	var script = document.createElement( "script" );
-	script.src = "https://s0.wp.com/wp-content/mu-plugins/actionbar/actionbar.js?v=20201002";
-	script.defer = true;
-	document.body.appendChild( script );
-} );
-</script>
-
-	<link rel='stylesheet' id='screen-css-0-2' href='https://s0.wp.com/wp-content/blog-plugins/launch-banner/style.css?m=1618418225h&cssminify=yes' type='text/css' media='screen' />
-<link rel='stylesheet' id='all-css-1-2' href='https://s0.wp.com/wp-content/plugins/editing-toolkit-plugin/prod/newspack-blocks/dist/blog-posts-block-view.css?m=1614726534h&cssminify=yes' type='text/css' media='all' />
-<script id='thickbox-js-extra'>
-var thickboxL10n = {"next":"Next >","prev":"< Prev","image":"Image","of":"of","close":"Close","noiframes":"This feature requires inline frames. You have iframes disabled or your browser does not support them.","loadingAnimation":"https:\/\/s0.wp.com\/wp-includes\/js\/thickbox\/loadingAnimation.gif"};
-</script>
-<script id='comment-like-js-extra'>
-var comment_like_text = {"loading":"Loading..."};
-</script>
-<script id='notes-rest-common-js-extra'>
-var wpNotesArgs = {"cacheBuster":"@automattic\/jetpack-blocks@13.1.0-12669-g727d23c131v2","iframeUrl":"https:\/\/widgets.wp.com\/notifications\/","iframeAppend":"2","iframeScroll":"no","wide":"1"};
-</script>
-<script id='tos-report-form-js-extra'>
-var wpcom_tos_report_form = {"ajaxurl":"\/wp-admin\/admin-ajax.php","isLoggedoutUser":"","post_ID":"4","current_url":"https:\/\/design321429498.wordpress.com","report_this_content":"Report this content"};
-</script>
-<script crossorigin='anonymous' type='text/javascript' src='https://s0.wp.com/_static/??-eJyVUtFuwjAM/KGZCLTxNu1b0sa0LkkcJW4Lfz8HBmOosK0PVeI725ezzZyg5SgYxQzFOJyoxXRYDeXFKESx9aPDUjHpqd03fLgelkg9T5jpVA+GsgoUl1jWKQCNzbeEi4wwQvJjR/GGp3jLAb7zHucoL9TunvbnZp4aU2ZK+J+kH4H7ROkxKC2NjZlsJlsTUqZg8xGinaizQvzsXTO5DqUYHBXlPSF4OxvBkLwVvIsvGThGh7m0nPGRxY2tM4q45LDCYSxi2/6ZJ5GrlNMfqh0cYdr8yr+O6DlZuEDGxFlgxznc3/+0E8EWwVxbSdbXliUb9IqhQffIJkdFzITRcd0xSOyPO/J+ybWLAHQkFDsQZr8n+RKmC8DORJxLUi3QeFZF5/J67rRykXIOw0RYp/oR3tfbzfpNv9ft8Ak5MVG8'></script>
-<script type='text/javascript'>
-( 'fetch' in window ) || document.write( '<script src="https://s0.wp.com/wp-includes/js/dist/vendor/wp-polyfill-fetch.min.js?m=1612197847h&#038;ver=3.0.0"></scr' + 'ipt>' );( document.contains ) || document.write( '<script src="https://s0.wp.com/wp-includes/js/dist/vendor/wp-polyfill-node-contains.min.js?m=1540208548h&#038;ver=3.42.0"></scr' + 'ipt>' );( window.DOMRect ) || document.write( '<script src="https://s0.wp.com/wp-includes/js/dist/vendor/wp-polyfill-dom-rect.min.js?m=1612197847h&#038;ver=3.42.0"></scr' + 'ipt>' );( window.URL && window.URL.prototype && window.URLSearchParams ) || document.write( '<script src="https://s0.wp.com/wp-includes/js/dist/vendor/wp-polyfill-url.min.js?m=1585663916h&#038;ver=3.6.4"></scr' + 'ipt>' );( window.FormData && window.FormData.prototype.keys ) || document.write( '<script src="https://s0.wp.com/wp-includes/js/dist/vendor/wp-polyfill-formdata.min.js?m=1550600082h&#038;ver=3.0.12"></scr' + 'ipt>' );( Element.prototype.matches && Element.prototype.closest ) || document.write( '<script src="https://s0.wp.com/wp-includes/js/dist/vendor/wp-polyfill-element-closest.min.js?m=1540208548h&#038;ver=2.0.2"></scr' + 'ipt>' );( 'objectFit' in document.documentElement.style ) || document.write( '<script src="https://s0.wp.com/wp-includes/js/dist/vendor/wp-polyfill-object-fit.min.js?m=1615384028h&#038;ver=2.3.4"></scr' + 'ipt>' );
-( "objectFit" in document.documentElement.style ) || document.write( '<script src="https://s0.wp.com/wp-content/plugins/gutenberg-core/v10.7.1/vendor/object-fit-polyfill.min.5f0c4c73.js?m=1618439079h&#038;ver=2.3.5"></scr' + 'ipt>' );
-</script>
-	<script>
-	/(trident|msie)/i.test(navigator.userAgent)&&document.getElementById&&window.addEventListener&&window.addEventListener("hashchange",function(){var t,e=location.hash.substring(1);/^[A-z0-9_-]+$/.test(e)&&(t=document.getElementById(e))&&(/^(?:a|select|input|button|textarea)$/i.test(t.tagName)||(t.tabIndex=-1),t.focus())},!1);
-	</script>
-		<!-- Qualaroo for wordpress.com -->
-	<script type="text/javascript" id="qualaroo-init">
-		var _kiq = _kiq || [];
-					_kiq.push(['identify', 'lime4u']);
-							_kiq.push(['set', {"themeswitch_survey":"yes","site":"design321429498.wordpress.com"}]);
-			</script>
-	<script type="text/javascript">
-		(function(){
-			setTimeout(function(){
-				var d = document, f = d.getElementsByTagName('script')[0], s = d.createElement('script'); s.type = 'text/javascript';
-				s.async = true; s.src = '//s3.amazonaws.com/ki.js/17790/5-f.js'; f.parentNode.insertBefore(s, f);
-			}, 1);
-		})();
-	</script>
-	<script type="text/javascript">
-// <![CDATA[
-(function() {
-try{
-  if ( window.external &&'msIsSiteMode' in window.external) {
-    if (window.external.msIsSiteMode()) {
-      var jl = document.createElement('script');
-      jl.type='text/javascript';
-      jl.async=true;
-      jl.src='/wp-content/plugins/ie-sitemode/custom-jumplist.php';
-      var s = document.getElementsByTagName('script')[0];
-      s.parentNode.insertBefore(jl, s);
-    }
-  }
-}catch(e){}
-})();
-// ]]>
-</script><script src="//stats.wp.com/w.js?61" defer></script> <script type="text/javascript">
-_tkq = window._tkq || [];
-_stq = window._stq || [];
-_tkq.push(['identifyUser', 113526958, 'lime4u']);
-_tkq.push(['storeContext', {'blog_id':'193991874','blog_tz':'1','user_lang':'en','blog_lang':'en'}]);
-_stq.push(['view', {'blog':'193991874','v':'wpcom','tz':'1','user':'1','user_id':'113526958','post':'4','subd':'design321429498'}]);
-_stq.push(['extra', {'crypt':'UE40eW5QN0p8M2Y/RE1zNDZ8S252Wis9XUQyb3YrcUVIU2R0VH5TdVczSS1dJXJySlh5NmI1bzAvTC9MfmdfOTkleE1VQkJqU1c1Y0hITHZEKyVxWm89UE1fNFBMX1Y4YnBBeFlKcDJDVTRHcmEuLVlrVDlKVHpVaXExZ3NYTHJbei9BNmVsdlVGZERrW0xRNGVjbiUyb2ltcDV5ZVlMdGZ6W1h1SFFsd2cudlRIYVQvY1tWc0pBTU1vPWZHY213MTBwZnFTaCVyQXNBMEcvbS9fVSx8cGVNd3Y9SC1oMiZlbGJoLkN+STZGNkxpNz1Efl9wVW1fLT8rSCssNGlw'}]);
-	</script>
-<noscript><img src="https://pixel.wp.com/b.gif?v=noscript" style="height:1px;width:1px;overflow:hidden;position:absolute;bottom:1px;" alt="" /></noscript>
-<script>
-if ( 'object' === typeof wpcom_mobile_user_agent_info ) {
-
-	wpcom_mobile_user_agent_info.init();
-	var mobileStatsQueryString = "";
-	
-	if( false !== wpcom_mobile_user_agent_info.matchedPlatformName )
-		mobileStatsQueryString += "&x_" + 'mobile_platforms' + '=' + wpcom_mobile_user_agent_info.matchedPlatformName;
-	
-	if( false !== wpcom_mobile_user_agent_info.matchedUserAgentName )
-		mobileStatsQueryString += "&x_" + 'mobile_devices' + '=' + wpcom_mobile_user_agent_info.matchedUserAgentName;
-	
-	if( wpcom_mobile_user_agent_info.isIPad() )
-		mobileStatsQueryString += "&x_" + 'ipad_views' + '=' + 'views';
-
-	if( "" != mobileStatsQueryString ) {
-		new Image().src = document.location.protocol + '//pixel.wp.com/g.gif?v=wpcom-no-pv' + mobileStatsQueryString + '&baba=' + Math.random();
-	}
-	
-}
-</script>
+<footer class="footer">
+      <div class="container">
+        <div class="row">
+          <div class="col-md-3">
+            <h1 class="title">EZWIFT</h1>
+          </div>
+          <div class="col-md-3">
+            <ul class="nav">
+              <li class="nav-item">
+                <a class="nav-link" href="/ref={{sponsor}}" class = "nav-link">Home</a>
+                 
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/faq/ref={{sponsor}}" class="nav-link">
+                  FAQ
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/register/ref={{sponsor}}" class="nav-link">
+                  Register
+                </a>
+              </li>
+			  <li class="nav-item">
+                <a class="nav-link" href="/login/ref={{sponsor}}" class="nav-link">
+                  Login
+                </a>
+              </li>
+              
+            </ul>
+          </div>
+          <div class="col-md-3">
+            <ul class="nav">
+              <li class="nav-item">
+                <a href="/ref={{sponsor}}/#contact" class="nav-link">
+                  Contact Us
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/ref={{sponsor}}/#about" class="nav-link">
+                  How It Works
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/dashboard" class="nav-link">
+                  Dashboard
+                </a>
+              </li>
+              <li class="nav-item">
+                <a href="/logout" class="nav-link">
+                  Logout
+                </a>
+              </li>
+            </ul>
+          </div>
+          <div class="col-md-3">
+            <h3 class="title" id = "contact">Follow us:</h3>
+            <div class="btn-wrapper profile">
+              <a target="_blank" href="https://www.facebook.com/ezwift" class="btn btn-icon btn-neutral btn-round btn-simple" data-toggle="tooltip" data-original-title="Like us">
+                <i class="fab fa-facebook-square"></i>
+              </a>
+			  <a target="_blank" href="mailto: theezwift@gmail.com" class="btn btn-icon btn-neutral btn-round btn-simple" data-toggle="tooltip" data-original-title="Mail us">
+                <i class="fab fa-facebook-square"></i>
+              </a>
+			  <a target="_blank" href="mailto: theezwift@gmail.com" class="btn btn-icon btn-neutral btn-round btn-simple" data-toggle="tooltip" data-original-title="WhatsApp us">
+                <i class="fab fa-facebook-square"></i>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </div>
+  <!--   Core JS Files   -->
+  <script src="/assets/js/core/jquery.min.js" type="text/javascript"></script>
+  <script src="/assets/js/core/popper.min.js" type="text/javascript"></script>
+  <script src="/assets/js/core/bootstrap.min.js" type="text/javascript"></script>
+  <script src="/assets/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+  <!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
+  <script src="/assets/js/plugins/bootstrap-switch.js"></script>
+  <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
+  <script src="/assets/js/plugins/nouislider.min.js" type="text/javascript"></script>
+  <!-- Chart JS -->
+  <script src="/assets/js/plugins/chartjs.min.js"></script>
+  <!--  Plugin for the DatePicker, full documentation here: https://github.com/uxsolutions/bootstrap-datepicker -->
+  <script src="/assets/js/plugins/moment.min.js"></script>
+  <script src="/assets/js/plugins/bootstrap-datetimepicker.js" type="text/javascript"></script>
+  <!-- Black Dashboard DEMO methods, don't include it in your project! -->
+  <script src="/assets/demo/demo.js"></script>
+  <!-- Control Center for Black UI Kit: parallax effects, scripts for the example pages etc -->
+  <script src="/assets/js/blk-design-system.min.js?v=1.0.0" type="text/javascript"></script>
+  <script>
+    $(document).ready(function() {
+      // Javascript method's body can be found in assets/assets-for-demo/js/demo.js
+      demo.initLandingPageChart();
+    });
+  </script>
 </body>
+
 </html>
