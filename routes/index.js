@@ -195,8 +195,7 @@ router.get('/forgotpassword/:pin/:email', function(req, res, next) {
 });	
 
 //resend password reset code
-router.get('/resendPass/email=:email/str=:str', function(req, res, next) {
-	func.preset()
+router.get('/resendPass/email=:email/str=:str', function(req, res, next) {	
 	var details = req.params;
 	console.log(details)
 	db.query( 'SELECT * FROM passwordReset WHERE email = ?  AND link = ?', [details.email, details.str], function ( err, results, fields ){
@@ -213,14 +212,17 @@ router.get('/resendPass/email=:email/str=:str', function(req, res, next) {
 						res.redirect('/forgotpassword');
 					});
 				}else{
-					var success = 'Link resent!'
-					var mail = require('../nodemailer/password.js')
-					//mail.passReset(details.email, details.link, details.expire);
+					var success = 'Link resent!';
+					var str = details.pin;
+					var mail = require('../nodemailer/password.js');
+					mail.passReset(details.email, details.link, details.expire);
+					
 					res.render('forgotpassword', {
 						mess: 'Forgot Password?',
 						title: 'EZWIFT',
-						email: email,
-						str: pin,
+						email: details.email,
+						re: 'yhgy',
+						pin: str,
 						success: success
 					});
 				}
@@ -535,7 +537,7 @@ router.get('/referrals', ensureLoggedIn('/login'), function(req, res, next) {
 
 //get dashboard
 router.get('/dashboard', ensureLoggedIn('/login'), function(req, res, next) {
-	func.feedtimer(); func.feedtimer2()
+	func.feedtimer(); 
 	var currentUser = req.session.passport.user.user_id;
 	db.query( 'SELECT * FROM user WHERE user_id = ?', [currentUser], function ( err, results, fields ){
 		if( err ) throw err;
@@ -2418,7 +2420,7 @@ router.post('/changepass/:email', [	 check('password', 'Password must be between
 					if (err) throw err;
 					var success = 'Password changed successfully! please login';
 					res.render('forgotpassword', {
-						mess: 'Password Reset Failed', 
+						mess: 'Password Reset Successful!', 
 						success: success,
 						email: email, 
 						changepass: 'c', 

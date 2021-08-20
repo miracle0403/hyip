@@ -20,7 +20,7 @@ var preset = function(){
 setInterval(preset, 60000);
 
 exports.feedtimer = function(){
-	db.query( 'SELECT * FROM transactions WHERE status = ? and purpose = ? and amount = ?', ['pending', 'feeder_matrix', 10000], function ( err, results, fields ){
+	db.query( 'SELECT * FROM transactions WHERE (status = ? OR status = ?) and purpose = ? and amount = ?', ['pending', 'unconfirmed', 'feeder_matrix', 10000], function ( err, results, fields ){
 		if(err){ console.log(err)}
 		var trans = results;
 		var now = new Date()
@@ -28,42 +28,52 @@ exports.feedtimer = function(){
 			var cd = results[i].expire;
 			var receiver = trans[i];
 			if(now >= cd){
-				db.query('CALL leafdel(?)', [receiver.order_id], function(err, results, fields){
+				db.query('CALL leafdel(?,?)', [receiver.order_id, receiver.receiving_order], function(err, results, fields){
 					if(err){ console.log(err)}
 				});
 			}
 		}
 	});
 }
+
 
 exports.feedtimer2 = function(){
-	db.query( 'SELECT * FROM transactions WHERE status = ? and purpose = ? and amount = ?', ['pending', 'feeder_matrix', 15000], function ( err, results, fields ){
+	db.query( 'SELECT * FROM transactions WHERE (status = ? OR status = ?) and purpose = ? and amount = ?', ['pending', 'unconfirmed', 'feeder_matrix', 15000], function ( err, results, fields ){
 		if(err){ console.log(err)}
 		var trans = results;
 		var now = new Date()
 		for(var i = 0; i < trans.length; i++){
 			var cd = results[i].expire;
 			var receiver = trans[i];
+			
 			if(now >= cd){
-				db.query( 'SELECT receiving_order, totalamount FROM transactions WHERE order_id = ?', [receiver.order_id], function ( err, results, fields ){
+				db.query('CALL leafdel2(?,?)', [receiver.order_id, receiver.receiving_order], function(err, results, fields){
 					if(err){ console.log(err)}
-					var rec = results[0];
-					db.query('UPDATE feeder_tree SET level_two = ?, order2 = ? WHERE order_id = ?', ['No', null, receiver.order_id], function(err, results, fields){
-						if(err){ console.log(err)}
-						db.query('UPDATE feeder_tree SET totalamount = ? WHERE order_id = ?', [rec.totalamount + 1, receiver.order_id], function(err, results, fields){
-							if(err){ console.log(err)}
-							db.query('UPDATE transactions SET status = ? WHERE order_id = ?', ['Not Paid', receiver.order_id], function(err, results, fields){
-								if(err){ console.log(err)}
-							});
-						});
-					});
 				});
 			}
-		}
-	});
+		}	
+	});	
 }
 
+exports.feedtimer3 = function(){
+	db.query( 'SELECT * FROM transactions WHERE (status = ? OR status = ?) and purpose = ? and amount = ?', ['pending', 'unconfirmed', 'feeder_bonus', 15000], function ( err, results, fields ){
+		if(err){ console.log(err)}
+		var trans = results;
+		var now = new Date()
+		for(var i = 0; i < trans.length; i++){
+			var cd = results[i].expire;
+			var receiver = trans[i];
+			
+			if(now >= cd){
+				db.query('CALL leafdel3(?,?)', [receiver.order_id, receiver.receiving_order], function(err, results, fields){
+					if(err){ console.log(err)}
+				});
+			}
+		}	
+	});	
+}
 
+	
 exports.actimer = function(){
 	db.query( 'SELECT * FROM transactions WHERE status = ? and purpose = ?', ['pending', 'activation'], function ( err, results, fields ){
 		if(err){ console.log(err)}
