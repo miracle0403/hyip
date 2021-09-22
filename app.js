@@ -77,9 +77,9 @@ app.use(helmet());
 
 var options = {
 	host: "localhost",
-	user: "root",
-	password: '',
-	database: "hyipdb"
+	user: "elzazdpw_Elzscho",
+	password: 'Miracle1994@@',
+	database: "elzazdpw_ezwift"
 }
 
 app.use(myConnection(sql, options, 'pool')); 
