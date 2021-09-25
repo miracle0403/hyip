@@ -31,9 +31,9 @@ const options = {
   onConnectionRelease: () => { console.log("Release"); },
   mySQLSettings: {
 	host: "localhost",
-	user: "elzazdpw_Elzscho",
-	password: 'Miracle1994@@',
-	database: "elzazdpw_ezwift",
+	user: "root",
+	password: '',
+	database: "hyipdb",
     port: '3306',
     socketPath: '/var/run/mysqld/mysqld.sock',
     charset: 'utf8',
@@ -60,9 +60,9 @@ const options = {
   onConnectionRelease: () => { console.log("Release"); },
   mySQLSettings: {
 	host: "localhost",
-	user: "root",
-	password: '',
-	database: "hyipdb",
+	user: "elzazdpw_Elzscho",
+	password: 'Miracle1994@@',
+	database: "elzazdpw_ezwift",
     port: '3306',
     socketPath: '/var/run/mysqld/mysqld.sock',
     charset: 'utf8',
@@ -79,9 +79,9 @@ const mySQL = PoolManager(options);
 
 var pool  = mySQL.raw.createConnection({
 	host: "localhost",
-	user: "root",
-	password: '',
-	database: "hyipdb"
+	user: "elzazdpw_Elzscho",
+	password: 'Miracle1994@@',
+	database: "elzazdpw_ezwift"
 });
 
 pool.connect();
