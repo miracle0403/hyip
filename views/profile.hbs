@@ -15,7 +15,7 @@
 				  </div>
 			{{/if}}
    <div class="row">
-   <div class="col-md-3">
+   <div class="col-md-4">
             <div class="card card-user">
               <div class="card-header">
                 <h5 class="card-title"> Personal Profile </h5>
@@ -64,7 +64,7 @@
             
           </div>
           </div>
-          <div class="col-md-3">
+          <div class="col-md-4">
           <div class="card card-user">
               <div class="card-header">
                 <h5 class="card-title">Edit Contact </h5>
@@ -130,58 +130,8 @@
             
           </div>
           </div>
-          <div class="col-md-3">
-          <div class="card card-user">
-              <div class="card-header">
-                <h5 class="card-title">Edit Password </h5>
-              </div>
-              <div class="card-body">
-                <form action = "/passwordchange" method = "post">
-               
-		
-			 	{{#showSuccess}}
-				{{#passwordsuccess}}
-				  <div id = "passwordsuccess" class="alert alert-success">
-					{{.}}
-				  </div>
-				{{/passwordsuccess}}
-			{{/showSuccess}}
-			{{#showErrors}}
-				{{#passworderror}}
-				  <div id = "passworderror" class="alert alert-danger">
-					{{.}}
-				  </div>
-				{{/passworderror}}
-			{{/showErrors}}
-                  
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Old Password</label>
-                        <input type="password" class="form-control" placeholder="Old Password"  name = "oldpass" required/>
-                      
-                    
-                    </div>
-                    
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">New Password</label>
-                        <input type="password" class="form-control" placeholder="New Password"  name = "password" required/>
-                      
-                    </div>
-                    
-                      <div class="form-group">
-                        <label for="exampleInputEmail1">Confirm Password</label>
-                        <input type="password" class="form-control" placeholder="Confirm Password"  name = "cpass" required/>
-                      
-                    </div>
-                    <div class="update  ml-auto mr-auto">
-                      <button type="submit" class="btn btn-primary btn-round">Change Password </button>
-                    
-                  </div>
-                </form>
-              </div>
-            
-          </div>
-          </div>
-           <div class="col-md-3">
+          
+           <div class="col-md-4">
           <div class="card card-user">
               <div class="card-header">
                 <h5 id = "bank" class="card-title">Bank Update </h5>
@@ -243,6 +193,92 @@
           </div>
           </div>.
           </div>
-        </div>
+
+		 <div class="row">
+		<div class="col-md-4">
+          <div class="card card-user">
+              <div class="card-header">
+                <h5 class="card-title">Edit Password </h5>
+              </div>
+              <div class="card-body">
+                <form action = "/passwordchange" method = "post">
+               
+		
+			 	{{#showSuccess}}
+				{{#passwordsuccess}}
+				  <div id = "passwordsuccess" class="alert alert-success">
+					{{.}}
+				  </div>
+				{{/passwordsuccess}}
+			{{/showSuccess}}
+			{{#showErrors}}
+				{{#passworderror}}
+				  <div id = "passworderror" class="alert alert-danger">
+					{{.}}
+				  </div>
+				{{/passworderror}}
+			{{/showErrors}}
+                  
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Old Password</label>
+                        <input type="password" class="form-control" placeholder="Old Password"  name = "oldpass" required/>
+                      
+                    
+                    </div>
+                    
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">New Password</label>
+                        <input type="password" class="form-control" placeholder="New Password"  name = "password" required/>
+                      
+                    </div>
+                    
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Confirm Password</label>
+                        <input type="password" class="form-control" placeholder="Confirm Password"  name = "cpass" required/>
+                      
+                    </div>
+                    <div class="update  ml-auto mr-auto">
+                      <button type="submit" class="btn btn-primary btn-round">Change Password </button>
+                    
+                  </div>
+                </form>
+              </div>
+            
+          </div>
+          </div>
+		  <div class="col-md-4">
+          <div class="card card-user">
+              <div class="card-header">
+                <h5 class="card-title">Add Group Chat </h5>
+              </div>
+              <div class="card-body">
+                <form action = "/addchat" method = "post">
+               
+		
+			 	{{#showSuccess}}
+				{{#chatsuccess}}
+				  <div id = "chatsuccess" class="alert alert-success">
+					{{.}}
+				  </div>
+				{{/chatsuccess}}
+			{{/showSuccess}}
+			
+                     
+                    
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Chat Link</label>
+                        <input type="text" class="form-control" placeholder="Chat Link"  value = "{{bio.chat}}" name = "chat" required/>
+                      
+                    </div>
+                    <div class="update  ml-auto mr-auto">
+                      <button type="submit" class="btn btn-primary btn-round">Submit </button>
+                    
+                  </div>
+                </form>
+              </div>
+            
+          </div>
+          </div>
       </div>
+	  </div>
 {{> spagef}}

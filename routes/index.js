@@ -95,6 +95,27 @@ router.get('/ref=', function(req, res, next) {
 	res.redirect('/');
 });
 
+//landing page
+router.get('/welcome/:username', function(req, res, next){
+	var username = req.params.username;
+	db.query( 'SELECT username, chat FROM user WHERE username = ?', [username], function ( err, results, fields ){
+		if( err ) throw err;
+		var use = results[0];
+		if(results.length === 0){
+			res.redirect('/404');
+		}else if (use.chat === null){
+			res.redirect('/')
+		}else{
+			res.render('welcome',{
+				title: 'EZWIFT',
+				mess: 'Welcome to Ezwift',
+				username: username,
+				chat: use.chat
+			});
+		} 
+	});	
+});
+
 
 /*forgot password*/
 router.get('/forgotpassword', function(req, res, next) {	
@@ -470,6 +491,16 @@ router.get('/referrals', ensureLoggedIn('/login'), function(req, res, next) {
 										ftree: ftree,
 										referrals: referrals
 									});
+								}else if (last.level_two === 'pending'){
+									res.render('referrals', {
+										mess: 'MY REFERRALS', 
+										title: 'EZWIFT',
+										admin: admin,
+										me: 'You are in level two',
+										count: count,
+										ftree: ftree,
+										referrals: referrals
+									});
 								}
 							}
 							
@@ -514,6 +545,16 @@ router.get('/referrals', ensureLoggedIn('/login'), function(req, res, next) {
 										referrals: referrals
 									});
 								}else if (last.level_two === 'Yes'){
+									res.render('referrals', {
+										mess: 'MY REFERRALS', 
+										title: 'EZWIFT',
+										user: user,
+										me: 'You are in level two',
+										count: count,
+										ftree: ftree,
+										referrals: referrals
+									});
+								}else if (last.level_two === 'pending'){
 									res.render('referrals', {
 										mess: 'MY REFERRALS', 
 										title: 'EZWIFT',
@@ -1183,6 +1224,13 @@ router.get('/profile', ensureLoggedIn('/login'), function(req, res, next) {
 						bio: bio,
 						showSuccess: true,
 						banksuccess: flashMessages.banksuccess});
+			}else if (flashMessages.chatsuccess){
+				res.render( 'profile', {
+						mess: 'PROFILE UPDATE',
+						error: error,
+						bio: bio,
+						showSuccess: true,
+						chatsuccess: flashMessages.chatsuccess});
 			}else{
 				res.render('profile', {mess: 'User Profile', error: error, bio: bio});
 			}
@@ -1260,6 +1308,12 @@ router.get('/profile', ensureLoggedIn('/login'), function(req, res, next) {
 							admin: admin,
 							showSuccess: true,
 							banksuccess: flashMessages.banksuccess});
+				}else if (flashMessages.chatsuccess){
+					res.render( 'profile', {
+						mess: 'PROFILE UPDATE',
+						admin: admin,
+						showSuccess: true,
+						chatsuccess: flashMessages.chatsuccess});
 				}else{
 					res.render('profile', {mess: 'User Profile',  admin: admin});
 				}
@@ -1268,14 +1322,14 @@ router.get('/profile', ensureLoggedIn('/login'), function(req, res, next) {
 					res.render( 'profile', {
 							mess: 'PROFILE UPDATE',
 							error: error,
-							admin: admin,
+							bio:bio,
 							showErrors: true,
 							emailerror: flashMessages.emailerror});
 				}else if (flashMessages.emailsuccess){
 					res.render( 'profile', {
 							mess: 'PROFILE UPDATE',
 							error: error,
-							admin: admin,
+							bio:bio,
 							showSuccess: true,
 							emailsuccess: flashMessages.emailsuccess});
 				}else if (flashMessages.phonesuccess){
@@ -1283,59 +1337,66 @@ router.get('/profile', ensureLoggedIn('/login'), function(req, res, next) {
 							mess: 'PROFILE UPDATE',
 							error: error,
 							showSuccess: true,
-							admin: admin,
+							bio:bio,
 							phonesuccess: flashMessages.phonesuccess});
 				}else if (flashMessages.phoneerror ){
 					res.render( 'profile', {
 							mess: 'PROFILE UPDATE',
 							error: error,
-							admin: admin,
+							bio:bio,
 							showErrors: true,
 							phoneerror: flashMessages.phoneerror});
+				}else if (flashMessages.chatsuccess){
+					res.render( 'profile', {
+						mess: 'PROFILE UPDATE',
+						error: error,
+						bio:bio,
+						showSuccess: true,
+						chatsuccess: flashMessages.chatsuccess});
 				}else if (flashMessages.passworderror ){
 					res.render( 'profile', {
 							mess: 'PROFILE UPDATE',
 							error: error,
-							admin: admin,
+							bio:bio,
 							showErrors: true,
 							passworderror: flashMessages.passworderror});
 				}else if (flashMessages.passwordsuccess){
 					res.render( 'profile', {
 							mess: 'PROFILE UPDATE',
 							error: error,
-							admin: admin,
+							bio:bio,
 							showSuccess: true,
 							passwordsuccess: flashMessages.passwordsuccess});
 				}else if (flashMessages.banksuccess){
 					res.render( 'profile', {
 							mess: 'PROFILE UPDATE',
 							error: error,
-							admin: admin,
+							bio:bio,
 							showSuccess: true,
 							banksuccess: flashMessages.banksuccess});
 				} else if (flashMessages.bankerror ){
 					res.render( 'profile', {
 							mess: 'PROFILE UPDATE',
 							error: error,
-							admin: admin,
+							bio:bio,
 							showErrors: true,
 							bankerror: flashMessages.bankerror});
 				}else if (flashMessages.bitcoinerror ){
 					res.render( 'profile', {
 							mess: 'PROFILE UPDATE',
 							error: error,
-							admin: admin,
+							bio:bio,
 							showErrors: true,
 							bankerror: flashMessages.bankerror});
 				}else if (flashMessages.bitcoinsuccess){
 					res.render( 'profile', {
 							mess: 'PROFILE UPDATE',
 							error: error,
-							admin: admin,
+							bio:bio,
 							showSuccess: true,
 							banksuccess: flashMessages.banksuccess});
 				}else{
-					res.render('profile', {mess: 'User Profile', error: error, admin: admin});
+					res.render('profile', {mess: 'User Profile', error: error, bio:bio});
 				}
 			}
 		}
@@ -1379,6 +1440,7 @@ router.get('/referrals', ensureLoggedIn('/login'), function(req, res, next) {
 		//console.log(results)
 		if(results[0].user_type === 'user'){
 			var bio = results[0];
+			console.log(results)
 			db.query('SELECT  username, phone, email, status, activated, full_name FROM user WHERE sponsor = ? ', [bio.username], function(err, results, fields){
 				if (err) throw err;
 				var referrals = results;
@@ -1388,12 +1450,11 @@ router.get('/referrals', ensureLoggedIn('/login'), function(req, res, next) {
 					db.query( 'SELECT COUNT(username) AS count FROM user WHERE sponsor = ?', [bio.username], function ( err, results, fields ){
 						if (err) throw err;
 						var count = results[0].count;
-						console.log(count)
 						res.render('referrals', {title: 'HYIP', mess: 'MY REFERRALS', count: count, leg: leg, bio: bio, referrals: referrals})
 					});
 				});
 			});
-		}else if(results.user_type === 'admin'){
+		}else if(results[0].user_type === 'Administrator'){
 			var admin = results[0];
 			db.query('SELECT  username, phone, email, status, activated, full_name FROM user WHERE sponsor = ? ', [admin.username], function(err, results, fields){
 				if (err) throw err;
@@ -1735,6 +1796,18 @@ function authentificationMiddleware(){
   } 
 }
 
+//add group chat
+router.post('/addchat', authentificationMiddleware(), function(req, res, next){
+	var currentUser = req.session.passport.user.user_id;
+	var chat = req.body.chat;
+	
+	db.query('UPDATE user SET chat = ? WHERE user_id = ?', [chat, currentUser], function(err, results, fields){
+		if (err) throw err;
+		req.flash('chatsuccess', 'Group chat link has beed added') 
+		res.redirect('/profile/#chatsuccess')
+	});	
+});	
+
 //withraw
 router.post('/withdraw', authentificationMiddleware(), function(req, res, next){
 	var account = req.body.account;
@@ -1846,7 +1919,7 @@ router.post('/uploadpop/:order_id/', function(req, res, next){
 	});
 });
 
-router.post('/phonechange', [	 check('phone', 'Phone Number must be between 11 characters').isLength(11) ], function(req, res, next){
+router.post('/phonechange',  authentificationMiddleware(), [	 check('phone', 'Phone Number must be between 11 characters').isLength(11) ], function(req, res, next){
 	var currentUser = req.session.passport.user.user_id;
 	var bio = req.body;
 	var errors = validationResult(req).errors;

@@ -17,7 +17,7 @@ const PoolManager = require('mysql-connection-pool-manager');
   password: 'MIracle1994@I',
   database: "ezwiftdb"
 	
-});*/
+});
 const options = {
   idleCheckInterval: 1000,
   maxConnextionTimeout: 30000,
@@ -45,15 +45,43 @@ const options = {
     queueLimit: 5000,
     debug: false
   }
-}
+}*/
 
+const options = {
+  idleCheckInterval: 1000,
+  maxConnextionTimeout: 30000,
+  idlePoolTimeout: 3000,
+  errorLimit: 5,
+  preInitDelay: 50,
+  sessionTimeout: 60000,
+  onConnectionAcquire: () => { console.log("Acquire"); },
+  onConnectionConnect: () => { console.log("Connect"); },
+  onConnectionEnqueue: () => { console.log("Enqueue"); },
+  onConnectionRelease: () => { console.log("Release"); },
+  mySQLSettings: {
+	host: "localhost",
+	user: "root",
+	password: '',
+	database: "hyipdb",
+    port: '3306',
+    socketPath: '/var/run/mysqld/mysqld.sock',
+    charset: 'utf8',
+    multipleStatements: true,
+    connectTimeout: 15000,
+    acquireTimeout: 10000,
+    waitForConnections: true,
+    connectionLimit: 1000,
+    queueLimit: 5000,
+    debug: false
+  }
+}
 const mySQL = PoolManager(options);
 
 var pool  = mySQL.raw.createConnection({
 	host: "localhost",
-	user: "elzazdpw_Elzscho",
-	password: 'Miracle1994@@',
-	database: "elzazdpw_ezwift"
+	user: "root",
+	password: '',
+	database: "hyipdb"
 });
 
 pool.connect();

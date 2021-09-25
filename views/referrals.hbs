@@ -23,6 +23,8 @@
                 You have {{count}} referral(s)! 
                 </p>
                 <p>
+                Your landing page link is <a id = "landinglink" href ="/welcome/{{#if admin}}{{admin.username}}{{else}}{{user.username}}{{/if}}"> ezwift.online/welcome/{{#if admin}}{{admin.username}}{{else}}{{user.username}}{{/if}}</a>
+                </p> <p>
                 Your referral link is <a id = "reflink" href ="/register/ref={{#if admin}}{{admin.username}}{{else}}{{user.username}}{{/if}}"> ezwift.online/register/ref={{#if admin}}{{admin.username}}{{else}}{{user.username}}{{/if}}</a>
                 </p>
                 <h5 class = "text-center">MY FEEDER LEG</h5>
