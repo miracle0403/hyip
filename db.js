@@ -84,6 +84,13 @@ var pool  = mySQL.raw.createConnection({
 	database: "elzazdpw_ezwift"
 });
 
+/*var pool  = mySQL.raw.createConnection({
+	host: "localhost",
+	user: "root",
+	password: '',
+	database: "hyipdb"
+});
+*/
 pool.connect();
 
 /*mysql -u root -p

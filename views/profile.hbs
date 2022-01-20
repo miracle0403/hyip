@@ -245,6 +245,48 @@
               </div>
             
           </div>
+          </div>	
+		 
+		  <div class="col-md-4">
+          <div class="card card-user">
+              <div class="card-header">
+                <h5 class="card-title">Edit Tracking Code </h5>
+              </div>
+              <div class="card-body">
+                <form action = "/addtracking" method = "post">
+               
+		
+			 	{{#showSuccess}}
+				{{#tracksuccess}}
+				  <div id = "tracksuccess" class="alert alert-success">
+					{{.}}
+				  </div>
+				{{/tracksuccess}}
+			{{/showSuccess}}
+			{{#showErrors}}
+				{{#passworderror}}
+				  <div id = "passworderror" class="alert alert-danger">
+					{{.}}
+				  </div>
+				{{/passworderror}}
+			{{/showErrors}}
+                  
+                      <div class="form-group">
+                        <label for="exampleInputEmail1">Tracking Code</label>
+                        <textarea class="form-control" placeholder="Enter facebook pixel, google analytic or other tracking code to your landing page here." name = "tracking"  > {{bio.tracking_code}}{{admin.tracking_code}}</textarea>
+                      
+                    
+                    </div>
+                    
+                     
+                    <div class="update  ml-auto mr-auto">
+                      <button type="submit" class="btn btn-primary btn-round">Submit</button>
+                    
+                  </div>
+                </form>
+              </div>
+            
+          </div>
           </div>
 		  <div class="col-md-4">
           <div class="card card-user">
@@ -267,7 +309,7 @@
                     
                       <div class="form-group">
                         <label for="exampleInputEmail1">Chat Link</label>
-                        <input type="text" class="form-control" placeholder="Chat Link"  value = "{{bio.chat}}" name = "chat" required/>
+                        <input type="text" class="form-control" placeholder="Enter Chat Link"  value = "{{bio.chat}}{{admin.chat}}" name = "chat" required/>
                       
                     </div>
                     <div class="update  ml-auto mr-auto">

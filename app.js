@@ -81,6 +81,15 @@ var options = {
 	password: 'Miracle1994@@',
 	database: "elzazdpw_ezwift"
 }
+/*
+var options = {
+	host: "localhost",
+	user: "root",
+	password: '',
+	database: "hyipdb"
+}
+
+*/
 
 app.use(myConnection(sql, options, 'pool')); 
 

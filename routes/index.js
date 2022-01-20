@@ -98,7 +98,7 @@ router.get('/ref=', function(req, res, next) {
 //landing page
 router.get('/welcome/:username', function(req, res, next){
 	var username = req.params.username;
-	db.query( 'SELECT username, chat FROM user WHERE username = ?', [username], function ( err, results, fields ){
+	db.query( 'SELECT username, chat, tracking_code FROM user WHERE username = ?', [username], function ( err, results, fields ){
 		if( err ) throw err;
 		var use = results[0];
 		if(results.length === 0){
@@ -110,6 +110,7 @@ router.get('/welcome/:username', function(req, res, next){
 				title: 'EZWIFT',
 				mess: 'Welcome to Ezwift',
 				username: username,
+				track: use.tracking_code,
 				chat: use.chat
 			});
 		} 
@@ -1168,6 +1169,13 @@ router.get('/profile', ensureLoggedIn('/login'), function(req, res, next) {
 						bio: bio,
 						showSuccess: true,
 						emailsuccess: flashMessages.emailsuccess});
+			}else if (flashMessages.tracksuccess){
+				res.render( 'profile', {
+						mess: 'PROFILE UPDATE',
+						error: error,
+						showSuccess: true,
+						bio: bio,
+						tracksuccess: flashMessages.tracksuccess});
 			}else if (flashMessages.phonesuccess){
 				res.render( 'profile', {
 						mess: 'PROFILE UPDATE',
@@ -1252,6 +1260,13 @@ router.get('/profile', ensureLoggedIn('/login'), function(req, res, next) {
 							admin: admin,
 							showSuccess: true,
 							emailsuccess: flashMessages.emailsuccess});
+				}else if (flashMessages.tracksuccess){
+					res.render( 'profile', {
+							mess: 'PROFILE UPDATE',
+							
+							showSuccess: true,
+							
+							tracksuccess: flashMessages.tracksuccess});
 				}else if (flashMessages.phonesuccess){
 					res.render( 'profile', {
 							mess: 'PROFILE UPDATE',
@@ -1374,6 +1389,13 @@ router.get('/profile', ensureLoggedIn('/login'), function(req, res, next) {
 							bio:bio,
 							showSuccess: true,
 							banksuccess: flashMessages.banksuccess});
+				}else if (flashMessages.tracksuccess){
+					res.render( 'profile', {
+							mess: 'PROFILE UPDATE',
+							error: error,
+							showSuccess: true,
+							bio: bio,
+							tracksuccess: flashMessages.tracksuccess});
 				} else if (flashMessages.bankerror ){
 					res.render( 'profile', {
 							mess: 'PROFILE UPDATE',
@@ -1796,6 +1818,20 @@ function authentificationMiddleware(){
   } 
 }
 
+
+//add tracking code
+
+router.post('/addtracking', authentificationMiddleware(), function(req, res, next){
+	var currentUser = req.session.passport.user.user_id;
+	var tracking = req.body.tracking;
+	db.query('UPDATE user SET tracking_code = ? WHERE user_id = ?', [tracking, currentUser], function(err, results, fields){
+		if (err) throw err;
+		req.flash('tracksuccess', 'Tracking code has been updated') 
+		res.redirect('/profile/#tracksuccess')
+	});	
+});
+
+	
 //add group chat
 router.post('/addchat', authentificationMiddleware(), function(req, res, next){
 	var currentUser = req.session.passport.user.user_id;
@@ -1803,7 +1839,7 @@ router.post('/addchat', authentificationMiddleware(), function(req, res, next
 	
 	db.query('UPDATE user SET chat = ? WHERE user_id = ?', [chat, currentUser], function(err, results, fields){
 		if (err) throw err;
-		req.flash('chatsuccess', 'Group chat link has beed added') 
+		req.flash('chatsuccess', 'Group chat link has been added') 
 		res.redirect('/profile/#chatsuccess')
 	});	
 });	
